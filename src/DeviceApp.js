@@ -1,15 +1,11 @@
-import logo from './logo.svg';
-import './App.css';
+import './DeviceApp.css'; 
 import { Layout, message } from 'antd';
 import PageHeader from './components/PageHeader';
-import Home from './components/Home'
-import { isDisabled } from '@testing-library/user-event/dist/utils';
-import { logout } from './utils';
-import React, {useState, useEffect } from 'react';
+import React from 'react';
 
 const { Header, Content } = Layout;
 
-function App() {
+function DeviceApp() {
   const [loggedIn, setLoggedIn] = useState(false)
 
   const signinOnSuccess = () => {
@@ -60,4 +56,4 @@ function App() {
   );
 }
 
-export default App;
+export default DeviceApp;
