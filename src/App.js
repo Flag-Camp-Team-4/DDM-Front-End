@@ -1,19 +1,19 @@
-import { Layout, Dropdown, Menu, Button, PageHeader } from "antd";
+import { Layout, Dropdown, Menu, Button, PageHeader, Row } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import React from "react";
 import LoginPage from "./components/LoginPage";
-import Home from "./components/Home"; 
-import PageHeader from "./components/PageHeader"; 
+import Home from "./components/Home";
+import StaffPage from "./components/StaffPage";
 
- 
+
 const { Header, Content } = Layout;
- 
+
 class App extends React.Component {
   state = {
     authed: false,
     asStaff: false,
   };
- 
+
   componentDidMount() {
     const authToken = localStorage.getItem("authToken");
     const asStaff = localStorage.getItem("asStaff") === "true";
@@ -22,7 +22,7 @@ class App extends React.Component {
       asStaff: asStaff,
     });
   }
- 
+
   handleLoginSuccess = (token, asStaff) => {
     localStorage.setItem("authToken", token);
     localStorage.setItem("asStaff", asStaff);
@@ -31,7 +31,7 @@ class App extends React.Component {
       asStaff: asStaff,
     });
   };
- 
+
   handleLogOut = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("asStaff");
@@ -39,19 +39,19 @@ class App extends React.Component {
       authed: false,
     });
   };
- 
+
   renderContent = () => {
     if (!this.state.authed) {
       return <LoginPage handleLoginSuccess={this.handleLoginSuccess} />;
     }
- 
+
     if (this.state.asStaff) {
       return <StaffPage />;
     }
- 
+
     return <Home />;
   };
- 
+
   userMenu = (
     <Menu>
       <Menu.Item key="logout" onClick={this.handleLogOut}>
@@ -62,25 +62,32 @@ class App extends React.Component {
       </Menu.Item>
     </Menu>
   );
- 
+
   render() {
     return (
       <Layout style={{ height: "100vh" }}>
-        <Header style={{ display: "flex", justifyContent: "space-between" }}>
-          <div style={{ fontSize: 16, fontWeight: 600, color: "white" }}>
-            Stays Booking
-          </div>
+        <Header style={{ backgroundColor: '#2050a0', padding: '0px', display: "flex", justifyContent: "space-between" }}>
+          <h1 style={{
+            color: 'white', fontFamily: 'Helvatica, Arial', fontWeight: 'bold', marginLeft: '20px'
+          }}>
+            Despatch & Delivery Managment
+          </h1>
           {this.state.authed && (
-            <PageHeader />
+            <div style={{ marginRight: "20px" }}>
+              <Dropdown trigger="click" overlay={this.userMenu}>
+                <Button icon={<UserOutlined />} shape="circle" />
+              </Dropdown>
+            </div>
+
           )}
         </Header>
         <Content
-          style={{ height: "calc(100% - 64px)", margin: 20, overflow: "auto" }}>
+          style={{ height: "calc(100% - 64px)", overflow: "auto" }}>
           {this.renderContent()}
         </Content>
       </Layout>
     );
   }
 }
- 
+
 export default App;

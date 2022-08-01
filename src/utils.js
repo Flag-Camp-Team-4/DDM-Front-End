@@ -1,7 +1,7 @@
-const domoain = "http://localhost:8080"
+const domain = "http://localhost:8080"
 
-export const login = (credential, asHost) => {
-    const loginUrl = `${domain}/authenticate/${asHost ? "user" : "staff"}`;
+export const login = (credential, asStaff) => {
+    const loginUrl = `${domain}/authenticate/${asStaff ? "staff" : "user"}`;
     return fetch(loginUrl, {
       method: "POST",
       headers: {
@@ -17,8 +17,8 @@ export const login = (credential, asHost) => {
     });
   };
   
-  export const register = (credential, asHost) => {
-    const registerUrl = `${domain}/register/${asHost ? "user" : "staff"}`;
+  export const register = (credential, asStaff) => {
+    const registerUrl = `${domain}/register/${asStaff ? "staff" : "user"}`;
     return fetch(registerUrl, {
       method: "POST",
       headers: {
@@ -31,3 +31,4 @@ export const login = (credential, asHost) => {
       }
     });
   };
+
