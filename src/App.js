@@ -10,7 +10,7 @@ import React, {useState, useEffect } from 'react';
 const { Header, Content } = Layout;
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(true)
 
   const signinOnSuccess = () => {
     setLoggedIn(true);
@@ -50,8 +50,8 @@ function App() {
               overflow: 'auto'
             }}
           >
-            <Home 
-            isLoggedIn={loggedIn}/>
+            {/* <Home 
+            isLoggedIn={loggedIn}/> */}
             
           </Content>
         </Layout>

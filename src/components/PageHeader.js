@@ -4,7 +4,7 @@ import Register from './Register';
 import Login from './Login';
 
 import React from 'react'
-import OrderList from './OrderList';
+import OrderPage from './OrderPage';
 
 const { Header } = Layout
 
@@ -23,7 +23,7 @@ function PageHeader({ loggedIn, signoutOnClick, signinOnSuccess}) {
         <Col>
           {loggedIn && (
             <>
-              <OrderList/>
+              <OrderPage/>
             </>
           )}
           
