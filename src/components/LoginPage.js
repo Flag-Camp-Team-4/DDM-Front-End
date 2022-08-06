@@ -185,6 +185,11 @@ class TrackForm extends React.Component {
 
     render() {
         const { data, loading } = this.state;
+        var trackResult = [];
+        for (var i in data) {
+          trackResult.push(data[i]);
+        }
+
         return (
             <div style={{ margin: "auto", textAlign: "center" }}>
                 <Form
@@ -209,33 +214,16 @@ class TrackForm extends React.Component {
                     </Form.Item>
                 </Form>
 
-                <List
-                    grid={{
-                        gutter: 16,
-                        xs: 1,
-                        sm: 3,
-                        md: 3,
-                        lg: 3,
-                        xl: 4,
-                        xxl: 4,
-                    }}
+                <Card
                     loading={loading}
-                    dataSource={data}
-                    renderItem={(item) => (
-                        <List.Item>
-                            <Card>
-                                title={<Text>Tracking Number: {item.trackId}</Text>}
-                                description={
-                                    <>
-                                        <Text>Sending Address: {item.sendingAddress}</Text>
-                                        <br />
-                                        <Text>Receiving Address: {item.receivingAddress}</Text>
-                                    </>
-                                }
-                            </Card>
-                        </List.Item>
-                    )}
-                />
+                    title={`Track Number: ${trackResult[0]}`}
+                    style={{ width: "60%", margin: "auto" }}>
+                    <p> Weight: {trackResult[1]}</p>
+                    <p> Price: {trackResult[2]}</p>
+                    <p> Sending Address: {trackResult[3]}</p>
+                    <p> Receiving Address: {trackResult[4]}</p>
+                    <p> Order: {trackResult[5]}</p>
+                </Card>
 
             </div>
         );
@@ -247,7 +235,7 @@ class TrackForm extends React.Component {
 
 //     render() {
 //         return (
-            
+
 //         )
 //     }
 // }
