@@ -1,7 +1,7 @@
 // import { Header } from "antd/lib/layout/layout";
 import React from "react";
 import {Input, Button, message, List, Skeleton, Divider, Typography} from "antd";
-import {demo, getOrderHistory } from "../utils";
+import {demo, getOrderById, getOrderHistory } from "../utils";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Demo from "./Demo";
 const { Search } = Input;
@@ -20,30 +20,42 @@ class SearchOrder extends React.Component {
         });
     }
 
-    handleSearch = async (query) => {
-        
-        this.setState({
-            search:true,
-        });
-        try {
-            const resp =  await demo(query);
-            this.setState({
-                data: resp,
-            });    
-            console.log(resp);
-        } catch (error) {
-            message.error(error.message);
-        } finally{
-            this.setState({
-                search: false
-            });
-        }
+    // handleSearch = async(query) => {
+       
+    //     this.setState({
+    //         search:true
+    //     })
+    //     try {
+    //         const resp =  await getOrderById(query);
+    //         this.setState({
+    //             data:resp
+    //         })
+            
+    //     } catch (error) {
+    //         message.error(error.message);
+    //     } finally {
+    //         this.setState ({
+    //             search: false
+    //         })
+    //     }
             
         
+    // }
+
+    handleSearch = (orderId) => {
+        getOrderById(orderId).then((resp)=>{
+            this.setState({
+                data: resp
+            })
+        }).catch((err)=>{
+            message.error(err.message);
+        })
     }
+
     render() {
-        const {data} = this.state;
-        // console.log(data);
+        const {search, data} = this.state;
+        console.log(data);
+        
         return(
            
             <>
@@ -61,47 +73,12 @@ class SearchOrder extends React.Component {
                         }}
                         loading={this.state.search}
                     />
-                    
-                    <div
-                        id="scrollableDiv"
-                        style={{
-                            height: 400,
-                            overflow: 'auto',
-                            padding: '0 16px',
-                            border: '1px solid rgba(140, 140, 140, 0.35)',
-                        }}
-                    >
-                        <InfiniteScroll
-                            dataLength={data.length}
-                            hasMore={data.length < 50}
-                            loader={
-                            <Skeleton
-                                avatar
-                                paragraph={{
-                                rows: 1,
-                                }}
-                                active
-                            />
-                            }
-                            endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
-                            scrollableTarget="scrollableDiv"
-                        >
-                        <List
-                            dataSource={data}
-                            // renderItem={(item) => (
-                            //     <List.Item key={item.source}>
-                            //     <List.Item.Meta
-                            //         title={<a href="https://ant.design">{item.name.last}</a>}
-                            //         description={item.email}
-                            //     />
-                            //     <div>Content</div>
-                            //     </List.Item>
-                            // )}
-                        />
-                    </InfiniteScroll>
-                    </div>
-                    
+                   <br/>
+                   <br/>
+                   {this.state.data}
+
                 </div>
+                
             </>
         );
     }
@@ -239,46 +216,3 @@ export default OrderPage;
 
 
 
-{/* // showList = <> */}
-            //             <div
-            //                 id="scrollableDiv"
-            //                 style={{
-            //                 height: 400,
-            //                 overflow: "auto",
-            //                 padding: "0 16px",
-            //                 border: "1px solid rgba(140, 140, 140, 0.35)"
-            //             }}
-            //             ></div>
-            //              <InfiniteScroll
-            //                 dataLength={this.state.data.length}
-            //                 next = {this.state.data}
-            //                 hasMore = {true}
-            //                 loader={
-            //                 <Skeleton
-            //                     avatar
-            //                     paragraph={{
-            //                         rows: 1,
-            //                     }}
-            //                     active
-            //                 />
-            //                 }
-            //                 endMessage={<Divider plain>Nothing more</Divider>}
-            //                 scrollbaleTarget="scrollableDiv"
-            //              />
-            //                 <List 
-            //                     dataSource={this.state.data}
-            //                     renderItem={(item) => (
-            //                         <List.Item key={item.track_id}>
-            //                             <List.Item.Meta
-            //                                 title={<>Tracking Number: {item.name.first}</>}
-            //                                 description={<>
-            //                                                 <div>
-            //                                                     {item.receiving_address}
-            //                                                 </div>
-            //                                             </>}
-            //                             />
-            //                             <Button onClick={this.handleView}>View Detail</Button>
-            //                         </List.Item>
-            //                     )}
-            //                 />
-            //             </>
