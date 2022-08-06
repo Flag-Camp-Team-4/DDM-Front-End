@@ -1,0 +1,9 @@
+.orderReview {
+    width: 40%;
+    margin: auto;
+    /* text-align: center; */
+}
+
+.reviewBlock {
+    border: solid 1px black;
+}

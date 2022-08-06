@@ -1,7 +1,14 @@
 import React from "react";
-import { Form, Button, Input, Space, Checkbox, message } from "antd";
+import 'antd/dist/antd.css';
+import { Tabs, Button, Form, Input, message, List, InputNumber, Space, Checkbox, Card } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import { login, register } from "../utils";
+import Text from "antd/lib/typography/Text";
+import { login, register, trackOrder } from "../utils";
+const { TabPane } = Tabs;
+
+const onChange = (key) => {
+    console.log(key);
+};
 
 class LoginPage extends React.Component {
     formRef = React.createRef();
@@ -70,91 +77,180 @@ class LoginPage extends React.Component {
             asStaff: e.target.checked,
         });
     };
-
     render() {
         return (
-            <main className="login_page">
-                <div style={{ width: 500, margin: "auto" }} className="forms">
-                    <h2>Track</h2>
-                    <Form name="trackNum">
-                        <Form.Item
-                            name="tracking_num"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please input tracking number. "
-                                },
-                            ]}>
-                            <Input placeholder="Input tracking number here" />
-                        </Form.Item>
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit">
-                                Submit
-                            </Button>
-                        </Form.Item>
-                    </Form>
-                    <br>
-                    </br>
-                    <h2>Login / Register</h2>
-                    <Form ref={this.formRef} onFinish={this.onFinish}>
-                        <Form.Item
-                            name="username"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please input your Username!",
-                                },
-                            ]}
-                        >
-                            <Input
-                                disabled={this.state.loading}
-                                prefix={<UserOutlined className="site-form-item-icon" />}
-                                placeholder="Username"
-                            />
-                        </Form.Item>
-                        <Form.Item
-                            name="password"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: "Please input your Password!",
-                                },
-                            ]}
-                        >
-                            <Input.Password
-                                disabled={this.state.loading}
-                                placeholder="Password"
-                            />
-                        </Form.Item>
-                    </Form>
-                    <Space>
-                        <Checkbox
-                            disabled={this.state.loading}
-                            checked={this.state.asStaff}
-                            onChange={this.handleCheckboxOnChange}
-                        >
-                            Staff Login
-                        </Checkbox>
-                        <Button
-                            onClick={this.handleLogin}
-                            disabled={this.state.loading}
-                            type="primary"
-                        >
-                            Log in
-                        </Button>
-                        <Button
-                            onClick={this.handleRegister}
-                            disabled={this.state.loading}
-                            type="primary"
-                        >
-                            Register
-                        </Button>
-                    </Space>
-                </div>
-            </main>
+            <div>
+                <Tabs
+                    defaultActiveKey="1"
+                    onChange={onChange}
+                    size="large"
+                    centered
+                >
+                    <TabPane tab="Track" key="1">
+
+                        {/* Track order */}
+                        <TrackForm />
+                    </TabPane>
+                    <TabPane tab="Login/Register" key="2" className="logRegForm">
+
+                        {/* From address */}
+                        {/* <LogRegForm /> */}
+                        <div style={{ width: 500, margin: "auto" }} className="forms">
+                            <Form ref={this.formRef} onFinish={this.onFinish}>
+                                <Form.Item
+                                    name="username"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please input your Username!",
+                                        },
+                                    ]}
+                                >
+                                    <Input
+                                        disabled={this.state.loading}
+                                        prefix={<UserOutlined className="site-form-item-icon" />}
+                                        placeholder="Username"
+                                    />
+                                </Form.Item>
+                                <Form.Item
+                                    name="password"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please input your Password!",
+                                        },
+                                    ]}
+                                >
+                                    <Input.Password
+                                        disabled={this.state.loading}
+                                        placeholder="Password"
+                                    />
+                                </Form.Item>
+                            </Form>
+                            <Space>
+                                <Checkbox
+                                    disabled={this.state.loading}
+                                    checked={this.state.asStaff}
+                                    onChange={this.handleCheckboxOnChange}
+                                >
+                                    Staff Login
+                                </Checkbox>
+                                <Button
+                                    onClick={this.handleLogin}
+                                    disabled={this.state.loading}
+                                    type="primary"
+                                >
+                                    Log in
+                                </Button>
+                                <Button
+                                    onClick={this.handleRegister}
+                                    disabled={this.state.loading}
+                                    type="primary"
+                                >
+                                    Register
+                                </Button>
+                            </Space>
+                        </div>
+                    </TabPane>
+                </Tabs>
+            </div>
         );
     }
 }
+
+class TrackForm extends React.Component {
+    state = {
+        data: [],
+        loading: false,
+    }
+
+    track = async (trackId) => {
+        this.setState({
+            loading: true,
+        });
+
+        try {
+            const resp = await trackOrder(trackId);
+            this.setState({
+                data: resp,
+            });
+        } catch (error) {
+            message.error(error.message);
+        } finally {
+            this.setState({
+                loading: false,
+            })
+        }
+    };
+
+    render() {
+        const { data, loading } = this.state;
+        return (
+            <div style={{ margin: "auto", textAlign: "center" }}>
+                <Form
+                    onFinish={this.track}>
+                    <Form.Item
+                        name="trackId"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please input tracking number. "
+                            },
+                        ]}>
+                        <InputNumber />
+                    </Form.Item>
+                    <Form.Item>
+                        <Button
+                            loading={loading}
+                            type="primary"
+                            htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
+
+                <List
+                    grid={{
+                        gutter: 16,
+                        xs: 1,
+                        sm: 3,
+                        md: 3,
+                        lg: 3,
+                        xl: 4,
+                        xxl: 4,
+                    }}
+                    loading={loading}
+                    dataSource={data}
+                    renderItem={(item) => (
+                        <List.Item>
+                            <Card>
+                                title={<Text>Tracking Number: {item.trackId}</Text>}
+                                description={
+                                    <>
+                                        <Text>Sending Address: {item.sendingAddress}</Text>
+                                        <br />
+                                        <Text>Receiving Address: {item.receivingAddress}</Text>
+                                    </>
+                                }
+                            </Card>
+                        </List.Item>
+                    )}
+                />
+
+            </div>
+        );
+    }
+}
+
+// class LogRegForm extends React.Component {
+
+
+//     render() {
+//         return (
+            
+//         )
+//     }
+// }
 
 export default LoginPage;
 

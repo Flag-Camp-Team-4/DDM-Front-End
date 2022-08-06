@@ -1,4 +1,4 @@
-const domain = "http://localhost:8080"
+const domain = ""
 
 export const login = (credential, asStaff) => {
     const loginUrl = `${domain}/authenticate/${asStaff ? "staff" : "user"}`;
@@ -31,4 +31,20 @@ export const login = (credential, asStaff) => {
       }
     });
   };
+
+  export const trackOrder = (order) => {
+    const authToken = localStorage.getItem("authToken"); 
+    const trackingResultUrl = `${domain}/track/${order.trackId}`; 
+
+    return fetch(trackingResultUrl, {
+      headers: {
+        Authorization: `Bearer ${authToken}`, 
+      }, 
+    }).then((response) => {
+      if (response.status !== 200) {
+        throw Error("Fail to track this order"); 
+      }
+      return response.json(); 
+    }); 
+  }; 
 
