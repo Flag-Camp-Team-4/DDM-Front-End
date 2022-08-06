@@ -48,3 +48,15 @@ export const login = (credential, asStaff) => {
     }); 
   }; 
 
+  export const trackAsGuest = (order) => {
+    const trackingResultUrl = `${domain}/track/${order.trackId}`; 
+
+    return fetch(trackingResultUrl, {
+    }).then((response) => {
+      if (response.status !== 200) {
+        throw Error("Fail to track this order"); 
+      }
+      return response.json(); 
+    });  
+  }
+

@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import { Tabs, Button, Form, Input, message, List, InputNumber, Space, Checkbox, Card } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
-import { login, register, trackOrder } from "../utils";
+import { login, register, trackAsGuest, trackOrder } from "../utils";
 const { TabPane } = Tabs;
 
 const onChange = (key) => {
@@ -170,7 +170,7 @@ class TrackForm extends React.Component {
         });
 
         try {
-            const resp = await trackOrder(trackId);
+            const resp = await trackAsGuest(trackId);
             this.setState({
                 data: resp,
             });
@@ -185,6 +185,10 @@ class TrackForm extends React.Component {
 
     render() {
         const { data, loading } = this.state;
+        var result = [];
+        for(var i in data) {
+            result.push(data[i]);
+        }
         return (
             <div style={{ margin: "auto", textAlign: "center" }}>
                 <Form
@@ -208,8 +212,18 @@ class TrackForm extends React.Component {
                         </Button>
                     </Form.Item>
                 </Form>
-
-                <List
+                
+                <Card
+                    loading={loading}
+                    title={`Track Number: ${result[0]}`}
+                    style={{ width: "90%", margin: "auto" }}>
+                    <p> Weight: {result[1]}</p>
+                    <p> Price: {result[2]}</p>
+                    <p> Sending Address: {result[3]}</p>
+                    <p> Receiving Address: {result[4]}</p>
+                    <p> Order: {result[5]}</p>
+                </Card>
+                {/* <List
                     grid={{
                         gutter: 16,
                         xs: 1,
@@ -235,7 +249,7 @@ class TrackForm extends React.Component {
                             </Card>
                         </List.Item>
                     )}
-                />
+                /> */}
 
             </div>
         );
