@@ -1,6 +1,6 @@
 import React from "react";
 import 'antd/dist/antd.css';
-import { Tabs, Button, Form, Input, message, List, InputNumber, Card } from "antd";
+import { Tabs, Button, Form, Input, message, InputNumber, Card } from "antd";
 import Text from "antd/lib/typography/Text";
 import { trackOrder } from "../utils";
 
@@ -54,6 +54,7 @@ class TrackForm extends React.Component {
       this.setState({
         data: resp,
       });
+      console.log(this.state.data);
     } catch (error) {
       message.error(error.message);
     } finally {

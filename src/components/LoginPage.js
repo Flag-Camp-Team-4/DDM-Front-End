@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import { Tabs, Button, Form, Input, message, List, InputNumber, Space, Checkbox, Card } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
-import { login, register, trackOrder } from "../utils";
+import { login, register, trackAsGuest, trackOrder } from "../utils";
 const { TabPane } = Tabs;
 
 const onChange = (key) => {
@@ -170,7 +170,7 @@ class TrackForm extends React.Component {
         });
 
         try {
-            const resp = await trackOrder(trackId);
+            const resp = await trackAsGuest(trackId);
             this.setState({
                 data: resp,
             });
@@ -189,6 +189,7 @@ class TrackForm extends React.Component {
         for (var i in data) {
           trackResult.push(data[i]);
         }
+
 
         return (
             <div style={{ margin: "auto", textAlign: "center" }}>
@@ -224,6 +225,7 @@ class TrackForm extends React.Component {
                     <p> Receiving Address: {trackResult[4]}</p>
                     <p> Order: {trackResult[5]}</p>
                 </Card>
+
 
             </div>
         );
