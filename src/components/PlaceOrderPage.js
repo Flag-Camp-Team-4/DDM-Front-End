@@ -12,6 +12,8 @@ import {
 } from 'antd';
 import { getCost } from "../utils";
 
+const StaticMapUrl = `https://www.mapquestapi.com/staticmap/v5/map?start=New York, NY&end=Boston, MA&size=@2x&key=xAGEknEZgp2cweVEAI9RGBYxwGU88prC`;
+//const StaticMapUrl = `https://www.mapquestapi.com/staticmap/v5/map?start=${this.props.order.sending_address}&end=${this.props.order.receiving_address}&size=@2x&key=xAGEknEZgp2cweVEAI9RGBYxwGU88prC`;
 const { Title, Text } = Typography;
 
 class Info extends React.Component {
@@ -108,7 +110,7 @@ class Info extends React.Component {
                     >
                         <Input placeholder="Please input shipper's last name" />
                     </Form.Item>
-               
+
                     <Title level={3}>Enter Recipient Info</Title>
 
                     <Form.Item
@@ -136,10 +138,9 @@ class Info extends React.Component {
                     >
                         <Input placeholder="Please input recipient's last name" />
                     </Form.Item>
+                    <OrdSummary orderInfo={this.props.orderInfo} />
                 </Form>
-                <div />
-                <OrdSummary />
-                <p>
+                <h1>
                     <Button
                         onClick={this.handlePrevious}
                         disabled={this.state.loading}
@@ -154,7 +155,7 @@ class Info extends React.Component {
                     >
                         Next
                     </Button>
-                </p>
+                </h1>
             </>
         );
     };
@@ -163,7 +164,6 @@ class Info extends React.Component {
 class OrdSummary extends React.Component {
     state = {
         loading: false,
-        data: [],
     };
 
     componentDidMount() {
@@ -216,27 +216,11 @@ class OrdSummary extends React.Component {
                     autoComplete="off"
                 >
                     <Title level={3}>Order Summary</Title>
-                    <List
-                        style={{ margin: "auto" }}
-                        loading={this.state.loading}
-                        dataSource={this.state.data}
-                        renderItem={(item) => (
-                            <List.Item >
-                                <List.Item.Meta
-                                    title={<Text>{item.order_id}</Text>}
-                                    description={
-                                        <>
-                                            <Text>Delivery charge: {item.delivery_charge}</Text>
-                                            <br />
-                                            <Text>Estimated tax: {item.estimated_tax}</Text>
-                                            <br />
-                                            <Text>Total including tax: {item.total}</Text>
-                                        </>
-                                    }
-                                />
-                            </List.Item>
-                        )}
-                    />
+                    <Form>
+                        <p>Delivery Fee: {this.props.orderInfo.cost.deliveryFee}$</p>
+                        <p>Eximated Tax Collected: {this.props.orderInfo.cost.estimatedTax}$</p>
+                        <p>Order Total: {this.props.orderInfo.cost.orderTotal}$</p>
+                    </Form>
                 </Form>
             </>
         )
@@ -248,8 +232,8 @@ class RouteMap extends React.Component {
     render() {
         return (
             <Image
-                width={200}
-                src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                width={550}
+                src={`https://www.mapquestapi.com/staticmap/v5/map?start=${this.props.orderInfo.sending_address}&end=${this.props.orderInfo.receiving_address}&size=@2x&key=xAGEknEZgp2cweVEAI9RGBYxwGU88prC`}
             />
         )
     }
@@ -259,11 +243,11 @@ class PlaceOrderPage extends React.Component {
     render() {
         return (
             <Row className='main'>
-                <Col span={10} className="left-side">
-                    <Info handlePrevious={this.props.handlePrevious} handleNext={this.props.handleNext}/>
+                <Col span={11} className="left-side">
+                    <Info handlePrevious={this.props.handlePrevious} handleNext={this.props.handleNext} orderInfo={this.props.orderInfo} />
                 </Col>
-                <Col span={14} className="right-side">
-                    <RouteMap />
+                <Col span={13} className="right-side">
+                    <RouteMap orderInfo={this.props.orderInfo} />
                 </Col>
             </Row>
         );
