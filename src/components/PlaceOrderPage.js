@@ -10,10 +10,7 @@ import {
     message,
     Image
 } from 'antd';
-import { getCost } from "../utils";
 
-const StaticMapUrl = `https://www.mapquestapi.com/staticmap/v5/map?start=New York, NY&end=Boston, MA&size=@2x&key=xAGEknEZgp2cweVEAI9RGBYxwGU88prC`;
-//const StaticMapUrl = `https://www.mapquestapi.com/staticmap/v5/map?start=${this.props.order.sending_address}&end=${this.props.order.receiving_address}&size=@2x&key=xAGEknEZgp2cweVEAI9RGBYxwGU88prC`;
 const { Title, Text } = Typography;
 
 class Info extends React.Component {
@@ -84,7 +81,6 @@ class Info extends React.Component {
                     ref={this.formRef}
                 >
                     <Title level={3}>Enter Shipper Info</Title>
-
                     <Form.Item
                         label="First Name"
                         name="ShipperFirstName"
@@ -97,7 +93,6 @@ class Info extends React.Component {
                     >
                         <Input placeholder="Please input shipper's first name" />
                     </Form.Item>
-
                     <Form.Item
                         label="Last Name"
                         name="ShipperLastName"
@@ -110,9 +105,7 @@ class Info extends React.Component {
                     >
                         <Input placeholder="Please input shipper's last name" />
                     </Form.Item>
-
                     <Title level={3}>Enter Recipient Info</Title>
-
                     <Form.Item
                         label="First Name"
                         name="RecipientFirstName"
@@ -125,7 +118,6 @@ class Info extends React.Component {
                     >
                         <Input placeholder="Please input recipient's first name" />
                     </Form.Item>
-
                     <Form.Item
                         label="Last Name"
                         name="RecipientLastName"
@@ -166,9 +158,9 @@ class OrdSummary extends React.Component {
         loading: false,
     };
 
-    componentDidMount() {
-        this.loadData();
-    }
+    fee = this.props.orderInfo.price;
+    tax = this.fee * 0.06625;
+    total = this.fee + this.tax;   
 
     onFinish = (values) => {
         console.log('Success:', values);
@@ -176,25 +168,6 @@ class OrdSummary extends React.Component {
 
     onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
-    };
-
-    loadData = async () => {
-        this.setState({
-            loading: true,
-        });
-
-        try {
-            const resp = await getCost();
-            this.setState({
-                data: resp,
-            });
-        } catch (error) {
-            message.error(error.message);
-        } finally {
-            this.setState({
-                loading: false,
-            });
-        }
     };
 
     render() {
@@ -217,9 +190,9 @@ class OrdSummary extends React.Component {
                 >
                     <Title level={3}>Order Summary</Title>
                     <Form>
-                        <p>Delivery Fee: {this.props.orderInfo.cost.deliveryFee}$</p>
-                        <p>Eximated Tax Collected: {this.props.orderInfo.cost.estimatedTax}$</p>
-                        <p>Order Total: {this.props.orderInfo.cost.orderTotal}$</p>
+                        <p>Delivery Fee: {this.fee.toFixed(2)}$</p>
+                        <p>Eximated Tax Collected: {this.tax.toFixed(2)}$</p>
+                        <p>Order Total: {this.total.toFixed(2)}$</p>
                     </Form>
                 </Form>
             </>
@@ -228,7 +201,6 @@ class OrdSummary extends React.Component {
 }
 
 class RouteMap extends React.Component {
-    // 暂略
     render() {
         return (
             <Image

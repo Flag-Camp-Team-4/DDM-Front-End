@@ -32,10 +32,15 @@ p {
     margin-bottom: 1em;
     display: flex;
     justify-content: space-between;
-    margin-left: 25px;
+    margin-left: 15px;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     display: flex;
     margin-top: 0;
     margin-bottom: 0.5em;

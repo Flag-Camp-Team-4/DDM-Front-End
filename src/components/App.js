@@ -9,24 +9,17 @@ const { Header, Content } = Layout;
 
 class App extends React.Component {
   state = {
-    authed: false,
+    authed: true,
     toShipPage: false,
     toOrderReviewPage: false,
     orderInfo: {
-      sending_address: "New York, NY",
-      receiving_address:"Boston, MA",
-      lon1:100,
-      lat1:105,
-      lon2:200,
-      lat2:205,
-      weight:1, 
-      size:10,
-      device:10,
-      cost: {
-        deliveryFee: "9.99",
-        estimatedTax: "1.00",
-        orderTotal: "10.99"
-      }
+      price: 13.21,
+      receiving_address: "200 Angelo Cifelli Dr, Harrison, NJ 07029",
+      sending_address: "605 Pavonia Ave, Jersey City, NJ 07306",
+      track_id: 28606,
+      weight: 3,
+      device_id: 7,
+      user_name: "test1"
     }
   };
 
@@ -51,11 +44,11 @@ class App extends React.Component {
 
   renderContent = () => {
     if (this.state.toShipPage) {
-      return <ShipPage/>;
+      return <ShipPage />;
     } else if (this.state.toOrderReviewPage) {
       return <OrderReviewPage />;
     } else {
-      return <PlaceOrderPage handlePrevious={this.handleShipPage} handleNext={this.handleOrderReviewPage} orderInfo={this.state.orderInfo}/>;
+      return <PlaceOrderPage handlePrevious={this.handleShipPage} handleNext={this.handleOrderReviewPage} orderInfo={this.state.orderInfo} />;
     }
   };
 
