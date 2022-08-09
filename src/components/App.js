@@ -1,8 +1,8 @@
 import { Layout, Dropdown, Button } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import React from "react";
-import PlaceOrderPage from "./PlaceOrderPage";
 import ShipPage from "./ShipPage";
+import PlaceOrderPage from "./PlaceOrderPage";
 import OrderReviewPage from "./OrderReviewPage";
 
 const { Header, Content } = Layout;
