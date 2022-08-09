@@ -1,6 +1,6 @@
-import React from "react";
 import 'antd/dist/antd.css';
-import { Tabs, Button, Form, Input, message, InputNumber, Card } from "antd";
+import React, {useState} from "react";
+import { Tabs, Button, Form, Input, message, InputNumber, Card, Radio } from "antd";
 import { trackOrder, submitOrder } from "../utils";
 
 const { TabPane } = Tabs;
@@ -118,12 +118,19 @@ class Track extends React.Component {
 
 
 class Ship extends React.Component {
+    
     state = {
         loading: false,
     };
 
+    handleRadioOnChange = (e) => {
+        // const [value, deviceType] = useState("ROBOT");
+        this.setState({
+            deviceType: e.target.value
+        })
+    }
+
     handleSubmit = async (values) => {
-        const {order} = this.props; 
         this.setState({
             loading: true,
         });
@@ -132,7 +139,7 @@ class Ship extends React.Component {
                 sending_address: values.sending_address, 
                 receiving_address: values.receiving_address, 
                 weight: values.weight
-            });
+            }, this.state.deviceType);
             message.success("Successfully submitted order");
         } catch (error) {
             message.error(error.message);
@@ -245,12 +252,20 @@ class Ship extends React.Component {
                     </Form.Item>
 
                     <Form.Item>
+                        <Radio.Group onChange={this.handleRadioOnChange}>
+                            <Radio value={this.state.deviceType="ROBOT"}>Robot</Radio>
+                            <Radio value={this.state.deviceType="DRONE"}>Drone</Radio>
+                        </Radio.Group>
+                    </Form.Item>
+
+                    <Form.Item>
                         <Button
                             type="primary"
                             htmlType="submit"
                             loading={this.state.loading}>
                             Submit
                         </Button>
+
                     </Form.Item>
                 </Form>
             </div>

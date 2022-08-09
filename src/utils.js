@@ -47,10 +47,9 @@ export const trackOrder = (order) => {
 };
 
 
-export const submitOrder = (data) => {
+export const submitOrder = (data, deviceType) => {
     const authToken = localStorage.getItem("authToken");
-    const deviceType = data.deviceType;
-    const orderGenUrl = `${domain}/order/DRONE`;
+    const orderGenUrl = `${domain}/order/${deviceType}`;
 
     return fetch(orderGenUrl, {
         method: "POST",
@@ -60,6 +59,9 @@ export const submitOrder = (data) => {
         },
         body: JSON.stringify(data)
     }).then((response) => {
+        if (response.status == 500) {
+            throw Error(`No ${deviceType} available nearby`)
+        }
         if (response.status !== 200) {
             throw Error("Fail to submit the order");
         }
