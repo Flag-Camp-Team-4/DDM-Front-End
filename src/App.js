@@ -41,8 +41,6 @@ class App extends React.Component {
         });
     };
 
-
-    // Render Content
     renderContent = () => {
         if (!this.state.authed) {
             return <LoginPage handleLoginSuccess={this.handleLoginSuccess} />;
@@ -66,6 +64,7 @@ class App extends React.Component {
         </Menu>
     );
 
+    // Rander App
     render() {
         return (
             <Layout style={{ height: "100vh" }}>
@@ -81,7 +80,6 @@ class App extends React.Component {
                                 <Button icon={<UserOutlined />} shape="circle" />
                             </Dropdown>
                         </div>
-
                     )}
                 </Header>
                 <Content
