@@ -68,3 +68,19 @@ export const submitOrder = (data, deviceType) => {
     });
 }
 
+export const getEta = () => {
+    const authToken = localStorage.getItem("authToken"); 
+    const getSumUrl = `${domain}/order/generate`; 
+
+    return fetch(getSumUrl, {
+        headers: {
+            Authorization: `Bearer ${authToken}`
+        }, 
+    }).then((response) => {
+        if (response.status !== 200) {
+            throw Error("Fail to get estimation information"); 
+        }
+        return response.json(); 
+    })
+}
+
