@@ -44,7 +44,8 @@ class Ship extends React.Component {
         try {
             const resp = await getEta({
                 sending_address: values.sending_address,
-                receiving_address: values.receiving_address
+                receiving_address: values.receiving_address, 
+                weight: values.weight, 
             });
             this.setState({
                 data: resp
@@ -78,10 +79,12 @@ class Ship extends React.Component {
         const { data, loading } = this.state;
         var pickUpTime = [];
         var deliveryTime = [];
+        var cost = [];
 
         if (data !== undefined) {
             pickUpTime = data.pick_up_time;
             deliveryTime = data.delivery_time;
+            cost = data.cost;
         }
 
         return (
@@ -117,6 +120,19 @@ class Ship extends React.Component {
                             <Input />
                         </Form.Item>
 
+                        <Form.Item
+                            label="Weight (lb)"
+                            name="weight"
+                            rules={[
+                                {
+                                    required: true,
+                                    type: "number",
+                                    message: "Please input package weight. "
+                                },
+                            ]}>
+                            <InputNumber />
+                        </Form.Item>
+
                         <Form.Item>
                             <Button
                                 type="primary"
@@ -134,10 +150,15 @@ class Ship extends React.Component {
                         loading={loading}
                         title={"Shipping Estimation"}
                         style={{ width: "75%", margin: "auto" }}>
-                        <p>Robot delivery time ETA: {this.hourMinutesTime(deliveryTime[0])}</p>
-                        <p>Robot pick up time ETA: {this.hourMinutesTime(pickUpTime[0])}</p>
-                        <p>Drone delivery time ETA: {this.hourMinutesTime(deliveryTime[1])}</p>
-                        <p>Drone pick up time ETA: {this.hourMinutesTime(pickUpTime[1])}</p>
+                        <h3 style={{color: "#002f80"}}>Robot</h3>
+                        <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[0])}</p>
+                        <p>Pick up time ETA: {this.hourMinutesTime(pickUpTime[0])}</p>
+                        <p>Cost: {cost[0]}</p>
+
+                        <h3 style={{color: "#704000"}}>Drone</h3>
+                        <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[1])}</p>
+                        <p>Pick up time ETA: {this.hourMinutesTime(pickUpTime[1])}</p>
+                        <p>Cost: {cost[1]}</p>
                     </Card>
                 </div>
 

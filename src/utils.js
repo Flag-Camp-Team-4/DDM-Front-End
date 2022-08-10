@@ -68,11 +68,11 @@ export const submitOrder = (data, deviceType) => {
     });
 }
 
-export const getEta = (address) => {
+export const getEta = (info) => {
     const authToken = localStorage.getItem("authToken"); 
     const getSumUrl = 
-    `${domain}/order/generate?sending_address=${address.sending_address}
-    &receiving_address=${address.receiving_address}`; 
+    `${domain}/order/generate?sending_address=${info.sending_address}
+    &receiving_address=${info.receiving_address}&weight=${info.weight}`; 
 
     return fetch(getSumUrl, {
         headers: {
