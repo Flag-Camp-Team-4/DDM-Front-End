@@ -6,11 +6,12 @@ import {
     Input,
     Button,
     Typography,
+    List,
     message,
     Image
 } from 'antd';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 class Info extends React.Component {
     formRef = React.createRef();
