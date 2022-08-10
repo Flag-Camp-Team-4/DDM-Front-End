@@ -168,7 +168,7 @@ class TrackForm extends React.Component {
         loading: false,
     }
 
-    track = async function (trackId) {
+    track = async (trackId) => {
         this.setState({
             loading: true,
         });
@@ -221,8 +221,9 @@ class TrackForm extends React.Component {
 
                 <Card
                     loading={loading}
-                    title={`Track Number: ${trackResult[0]}`}
+                    title={"Tracking Result"}
                     style={{ width: "90%", margin: "auto" }}>
+                    <p> Tracking Number: {trackResult[0]}</p>
                     <p> Weight: {trackResult[1]}</p>
                     <p> Price: {trackResult[2]}</p>
                     <p> Sending Address: {trackResult[3]}</p>

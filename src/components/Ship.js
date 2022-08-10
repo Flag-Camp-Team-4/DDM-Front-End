@@ -128,11 +128,12 @@ class Ship extends React.Component {
                     </Form>
                 </div>
 
+                {/* ETA display card */}
                 <div>
                     <Card
                         loading={loading}
                         title={"Shipping Estimation"}
-                        style={{ width: "90%", margin: "auto" }}>
+                        style={{ width: "75%", margin: "auto" }}>
                         <p>Robot delivery time ETA: {this.hourMinutesTime(deliveryTime[0])}</p>
                         <p>Robot pick up time ETA: {this.hourMinutesTime(pickUpTime[0])}</p>
                         <p>Drone delivery time ETA: {this.hourMinutesTime(deliveryTime[1])}</p>
