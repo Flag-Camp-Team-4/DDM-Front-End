@@ -1,4 +1,5 @@
 const domain = ""
+//const domain = "http://localhost:8080";
 
 export const login = (credential, asStaff) => {
     const loginUrl = `${domain}/authenticate/${asStaff ? "staff" : "user"}`;
