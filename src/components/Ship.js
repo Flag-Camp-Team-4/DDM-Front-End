@@ -1,12 +1,12 @@
 import 'antd/dist/antd.css';
-import React from "react";
-import { message, InputNumber, Button, Form, Input, Radio } from "antd";
-import { submitOrder } from "../utils";
+import React, { version } from "react";
+import { message, InputNumber, Button, Form, Input, Radio, Card } from "antd";
+import { submitOrder, getEta } from "../utils";
 
 class Ship extends React.Component {
-    
+
     state = {
-        loading: false,
+        loading: false
     };
 
     handleRadioOnChange = (e) => {
@@ -22,8 +22,8 @@ class Ship extends React.Component {
         });
         try {
             await submitOrder({
-                sending_address: values.sending_address, 
-                receiving_address: values.receiving_address, 
+                sending_address: values.sending_address,
+                receiving_address: values.receiving_address,
                 weight: values.weight
             }, this.state.deviceType);
             message.success("Successfully submitted order");
@@ -36,14 +36,117 @@ class Ship extends React.Component {
         }
     };
 
+    handleGetEta = async (values) => {
+        this.setState({
+            loading: true,
+        });
+
+        try {
+            const resp = await getEta({
+                sending_address: values.sending_address,
+                receiving_address: values.receiving_address
+            });
+            this.setState({
+                data: resp
+            });
+        } catch (error) {
+            message.error(error.message);
+        } finally {
+            this.setState({
+                loading: false
+            });
+        }
+    };
+
+    hourMinutesTime = (minutesTime) => {
+        var hour = 0;
+        var minute = 0;
+        hour = Math.round(minutesTime / 60);
+        minute = minutesTime % 60;
+        return hour + "h " + minute + "m";
+    }
+
+    getInput = async (values) => {
+        var addrInput = [];
+        addrInput.push(values.sending_address);
+        addrInput.push(values.receiving_address);
+        return addrInput;
+    }
+
+
     render() {
+        const { data, loading } = this.state;
+        var pickUpTime = [];
+        var deliveryTime = [];
+
+        if (data !== undefined) {
+            pickUpTime = data.pick_up_time;
+            deliveryTime = data.delivery_time;
+        }
+
         return (
             <div>
-                <h2 style={{ marginLeft: "12.5%" }}>From</h2>
+                <div>
+                    <h2 style={{ textAlign: "center" }}>Shipping Estimation Wizard</h2>
+                    <Form
+                        name="nest-messages"
+                        onFinish={this.handleGetEta}
+                        style={{ width: "75%", margin: "auto" }}>
+                        <h3>From</h3>
+                        <Form.Item
+                            name="sending_address"
+                            label="Street Address"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please input street address. "
+                                }]}>
+                            <Input />
+                        </Form.Item>
+
+                        <h3>To</h3>
+                        <Form.Item
+                            label="Street Address"
+                            name="receiving_address"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please input street address. "
+                                },
+                            ]}>
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                loading={this.state.loading}>
+                                Get ETA
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </div>
+
+                <div>
+                    <Card
+                        loading={loading}
+                        title={"Shipping Estimation"}
+                        style={{ width: "90%", margin: "auto" }}>
+                        <p>Robot delivery time ETA: {this.hourMinutesTime(deliveryTime[0])}</p>
+                        <p>Robot pick up time ETA: {this.hourMinutesTime(pickUpTime[0])}</p>
+                        <p>Drone delivery time ETA: {this.hourMinutesTime(deliveryTime[1])}</p>
+                        <p>Drone pick up time ETA: {this.hourMinutesTime(pickUpTime[1])}</p>
+                    </Card>
+                </div>
+
+                <br />
+                <h2 style={{ textAlign: "center" }}>Input shipping info</h2>
                 <Form
-                    name="nest-messages"
                     onFinish={this.handleSubmit}
                     style={{ width: "75%", margin: "auto" }}>
+
+                    <h3>From</h3>
                     <Form.Item
                         name="sending_address"
                         label="Street Address"
@@ -54,19 +157,8 @@ class Ship extends React.Component {
                             }]}>
                         <Input />
                     </Form.Item>
-                    <Form.Item
-                        label="Suite, Apt, etc"
-                        name="suite_apt_from"
-                        rules={[
-                            {
-                                required: false,
-                            },
-                        ]}>
-                        <Input />
-                    </Form.Item>
 
-                    {/* To address */}
-                    <h2>To</h2>
+                    <h3>To</h3>
                     <Form.Item
                         label="Street Address"
                         name="receiving_address"
@@ -78,52 +170,7 @@ class Ship extends React.Component {
                         ]}>
                         <Input />
                     </Form.Item>
-                    <Form.Item
-                        label="Suite, Apt, etc"
-                        name="suite_apt_to"
-                        rules={[
-                            {
-                                required: false,
-                            },
-                        ]}>
-                        <Input />
-                    </Form.Item>
 
-                    {/* Package Info */}
-                    <h2>Package Info</h2>
-                    {/* <Form.Item
-                        label="Length (inch)"
-                        name="length"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please input package length. "
-                            },
-                        ]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        label="Width (inch)"
-                        name="width"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please input package width. "
-                            },
-                        ]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        label="Height (inch)"
-                        name="height"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please input package height. "
-                            },
-                        ]}>
-                        <Input />
-                    </Form.Item>  */}
                     <Form.Item
                         label="Weight (lb)"
                         name="weight"
@@ -143,7 +190,6 @@ class Ship extends React.Component {
                             <Radio value={"DRONE"}>Drone</Radio>
                         </Radio.Group>
                     </Form.Item>
-
                     <Form.Item>
                         <Button
                             type="primary"
@@ -151,9 +197,9 @@ class Ship extends React.Component {
                             loading={this.state.loading}>
                             Submit
                         </Button>
-
                     </Form.Item>
                 </Form>
+
             </div>
         );
     }

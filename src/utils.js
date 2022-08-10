@@ -68,9 +68,11 @@ export const submitOrder = (data, deviceType) => {
     });
 }
 
-export const getEta = () => {
+export const getEta = (address) => {
     const authToken = localStorage.getItem("authToken"); 
-    const getSumUrl = `${domain}/order/generate`; 
+    const getSumUrl = 
+    `${domain}/order/generate?sending_address=${address.sending_address}
+    &receiving_address=${address.receiving_address}`; 
 
     return fetch(getSumUrl, {
         headers: {
@@ -81,6 +83,6 @@ export const getEta = () => {
             throw Error("Fail to get estimation information"); 
         }
         return response.json(); 
-    })
+    }); 
 }
 

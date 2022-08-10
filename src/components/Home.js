@@ -15,7 +15,7 @@ class Home extends React.Component {
         return (
             <main>
                 <br />
-                <div style={{ backgroundColor: "rgba(255, 255, 255, 0.8)", width: "50%", margin: "auto" }}>
+                <div style={{ backgroundColor: "rgba(255, 255, 255, 0.8)", width: "75%", margin: "auto" }}>
                     <Tabs
                         defaultActiveKey="1"
                         onChange={onChange}
