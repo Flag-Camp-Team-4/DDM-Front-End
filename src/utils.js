@@ -59,7 +59,7 @@ export const submitOrder = (data, deviceType) => {
         },
         body: JSON.stringify(data)
     }).then((response) => {
-        if (response.status == 500) {
+        if (response.status === 500) {
             throw Error(`No ${deviceType} available nearby`)
         }
         if (response.status !== 200) {
