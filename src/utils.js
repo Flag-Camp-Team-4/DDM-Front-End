@@ -1,54 +1,41 @@
-const domain = "http://localhost:8080";
+const domain = ""
 
-export const getOrder = async (trackId) => {
-    const listCostUrl = `${domain}/track/${trackId}`;
-
-    const response = await fetch(listCostUrl);
-    if (response.status !== 200) {
-        throw Error("Fail to get order");
-    }
-    return await response.json();
-};
-
-export const getDevice = async (stationId, deviceType) => {
-    const authToken = localStorage.getItem("authToken");
-    const listCostUrl = `${domain}/order/search/device/${stationId}/${deviceType}`;
-
-    const response = await fetch(listCostUrl, {
+export const login = (credential, asStaff) => {
+    const loginUrl = `${domain}/authenticate/${asStaff ? "staff" : "user"}`;
+    return fetch(loginUrl, {
+        method: "POST",
         headers: {
-            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
         },
+        body: JSON.stringify(credential),
+    }).then((response) => {
+        if (response.status !== 200) {
+            throw Error("Fail to log in");
+        }
+        return response.json();
     });
-    if (response.status !== 200) {
-        throw Error("Fail to get device");
-    }
-    return await response.json();
 };
 
-
-export const getCost = async (lon1, lat1, lon2, lat2, weight, size, device) => {
-    const authToken = localStorage.getItem("authToken");
-    const listCostUrl = `${domain}/device/${lon1}/${lat1}/${lon2}/${lat2}/${weight}/${size}/${device}`;
-
-    const response = await fetch(listCostUrl, {
+export const register = (credential, asStaff) => {
+    const registerUrl = `${domain}/register/${asStaff ? "staff" : "user"}`;
+    return fetch(registerUrl, {
+        method: "POST",
         headers: {
-            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
         },
+        body: JSON.stringify(credential),
+    }).then((response) => {
+        if (response.status !== 200) {
+            throw Error("Fail to register");
+        }
     });
-    if (response.status !== 200) {
-        throw Error("Fail to get order cost");
-    }
-    return await response.json();
 };
 
-export const getOrderHistory = () => {
-    const authToken = localStorage.getItem("authToken"); 
-    const orderHistoryUrl = `${domain}/user/historyorders`;
 
-    return fetch(orderHistoryUrl,  {
-        headers: {
-            Authorization: `Bearer ${authToken}`
-        }, 
+export const trackOrder = (order) => {
+    const trackingResultUrl = `${domain}/track/${order.trackId}`;
+
+    return fetch(trackingResultUrl, {
     }).then((response) => {
         if (response.status !== 200) {
             throw Error("Fail to track this order");
@@ -58,3 +45,39 @@ export const getOrderHistory = () => {
 };
 
 
+export const submitOrder = (data, deviceType) => {
+    const authToken = localStorage.getItem("authToken");
+    const orderGenUrl = `${domain}/order/${deviceType}`;
+
+    return fetch(orderGenUrl, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${authToken}`, 
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    }).then((response) => {
+        if (response.status === 500) {
+            throw Error(`No ${deviceType} available nearby`)
+        }
+        if (response.status !== 200) {
+            throw Error("Fail to submit the order");
+        }
+    });
+}
+
+export const getHistoryOrder = () => {
+    const authToken = localStorage.getItem("authToken");
+    const getHistoryOrderUrl = `${domain}/user/historyorders`;
+
+    return fetch(getHistoryOrderUrl, {
+        headers:{
+            Authorization: `Bearer ${authToken}`,
+        }
+    }).then((response) => {
+        if(response.status !== 200) {
+            throw Error("Fail to get order History");
+        }
+        return response.json();
+    })
+}
