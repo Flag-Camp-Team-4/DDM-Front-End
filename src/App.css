@@ -1,6 +1,12 @@
-.App {
+@import "styles/LoginPage.css"; 
+@import "styles/Home.css"; 
+
+/* .ant-layout-content {
   text-align: center;
-}
+  background-image: url("wallhaven-9ml1xk.png");
+  background-attachment: fixed;
+  background-size: 100%;
+} */
 
 /* .App-logo {
   height: 40vmin;

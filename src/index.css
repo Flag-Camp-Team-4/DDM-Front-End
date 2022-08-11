@@ -1,10 +1,5 @@
 @import "~antd/dist/antd.css"; 
+@import "styles/LoginPage.css"; 
+@import "App.css"; 
 @import "styles/Home.css"; 
-
-.site-layout-background {
-  background-image: url("wallhaven-9ml1xk.png");
-  background-attachment: fixed;
-  background-size: 100%; 
-}
-
-
+@import "styles/OrderReview.css";

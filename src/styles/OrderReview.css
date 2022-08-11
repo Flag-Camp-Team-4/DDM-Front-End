@@ -1,0 +1,16 @@
+
+.forms {
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8); 
+    width: 50%; 
+    margin: auto; 
+  }
+  
+.login_page {
+    padding-top: 20px; 
+}
+
+.order_review {
+  padding: 30px;
+  background: #ececec;
+}

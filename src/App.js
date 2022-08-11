@@ -1,63 +1,109 @@
-import logo from './logo.svg';
-import './App.css';
-import { Layout, message } from 'antd';
-import PageHeader from './components/PageHeader';
-import Home from './components/Home'
-import { isDisabled } from '@testing-library/user-event/dist/utils';
-import { logout } from './utils';
-import React, {useState, useEffect } from 'react';
+import { Layout, Dropdown, Menu, Button,message } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+import React from "react";
+import LoginPage from "./components/LoginPage";
+import Home from "./components/Home";
+import StaffPage from "./components/StaffPage";
+import OrderReview from "./components/OrderReview"
+import { getHistoryOrder } from "./utils";
 
 const { Header, Content } = Layout;
 
-function App() {
-  const [loggedIn, setLoggedIn] = useState(true)
+class App extends React.Component {
+    state = {
+        authed: false,
+        asStaff: false,
+        loading: false,
+        data:[],
+    };
 
-  const signinOnSuccess = () => {
-    setLoggedIn(true);
-  }
+    componentDidMount() {
+        const authToken = localStorage.getItem("authToken");
+        const asStaff = localStorage.getItem("asStaff") === "true";
+        this.setState({
+            authed: authToken !== null,
+            asStaff: asStaff,
+        });
+    }
 
-  const signoutOnClick = () => {
-    logout().then(() => {
-      setLoggedIn(false)
-      message.success('Successfully Signed out')
-    }).catch((err) => {
-      message.error(err.message)
-    })
-  }
+    handleLoginSuccess = (token, asStaff) => {
+        localStorage.setItem("authToken", token);
+        localStorage.setItem("asStaff", asStaff);
+        this.setState({
+            authed: true,
+            asStaff: asStaff,
+        });
+    };
+
+    handleLogOut = () => {
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("asStaff");
+        this.setState({
+            authed: false,
+            loading: false,
+        });
+    };
+
+    handleClickOrderHistory = () => {
+        this.setState( {
+            loading: true,
+        })
+    }
+
+    renderContent = () => {
+        if (!this.state.authed) {
+            return <LoginPage handleLoginSuccess={this.handleLoginSuccess} />;
+        }
+
+        if (this.state.asStaff) {
+            return <StaffPage />;
+        }
+
+        if(this.state.loading) {
+            return <OrderReview data={this.state.data}/>
+        }
 
 
-  return (
-    <Layout>
-      <Header
-      style={{padding: '0px', flex: isDisabled}}>
-        <PageHeader 
-        loggedIn={loggedIn}
-        signoutOnClick={signoutOnClick}
-        signinOnSuccess={signinOnSuccess}
-         />
-        {/* <h1 style={{ color: 'white', fontFamily: 'Helvatica, Arial', fontWeight: 'bold' }}>
-        Despatch & Delivery Managment
-      </h1> */}
-      </Header>
-      <Layout>
-        <Layout style={{ padding: '5px' }}>
-          <Content
-            className="site-layout-background"
-            style={{
-              padding: 20,
-              margin: 0,
-              height: 800,
-              overflow: 'auto'
-            }}
-          >
-            {/* <Home 
-            isLoggedIn={loggedIn}/> */}
-            
-          </Content>
-        </Layout>
-      </Layout>
-    </Layout>
-  );
+
+        return <Home />;
+    };
+
+    userMenu = (
+        <Menu>
+            <Menu.Item key="logout" onClick={this.handleLogOut}>
+                Log Out
+            </Menu.Item>
+            <Menu.Item key="orderHistory" onClick={this.handleClickOrderHistory}>
+                Order History
+            </Menu.Item>
+        </Menu>
+    );
+
+    // Rander App
+    render() {
+        return (
+            <Layout style={{ height: "100vh" }}>
+                <Header style={{ backgroundColor: '#2050a0', padding: '0px', display: "flex", justifyContent: "space-between" }}>
+                    <h1 style={{
+                        color: 'white', fontFamily: 'Helvatica, Arial', fontWeight: 'bold', marginLeft: '20px'
+                    }}>
+                        Despatch & Delivery Managment
+                    </h1>
+                    {this.state.authed && (
+                        <div style={{ marginRight: "20px" }}>
+                            <Dropdown trigger="click" overlay={this.userMenu}>
+                                <Button icon={<UserOutlined />} shape="circle" />
+                            </Dropdown>
+                        </div>
+                    )}
+                </Header>
+                <Content
+                    style={{ height: "calc(100% - 64px)", overflow: "auto" }}>
+                    {this.renderContent()}
+                </Content>
+            </Layout>
+        );
+    }
 }
 
 export default App;
