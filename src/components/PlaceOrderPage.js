@@ -6,38 +6,33 @@ import {
     Input,
     Button,
     Typography,
-    List,
     message,
     Image
 } from 'antd';
+import { useState } from "react";
+import { getOrderHistory } from "../utils";
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
-class Info extends React.Component {
-    formRef = React.createRef();
+function Info({ handleBack, handleNext, orderInfo }) {
+    let formRef = React.createRef();
 
-    state = {
-        loading: false,
-    };
+    const [loading, setLoading] = useState(false);
 
-    handlePrevious = () => {
-        this.setState({
-            loading: true,
-        });
+    const back = () => {
+        setLoading(true);
 
         try {
-            this.props.handlePrevious();
+            handleBack();
         } catch (error) {
             message.error(error.message);
         } finally {
-            this.setState({
-                loading: false,
-            });
+            setLoading(false);
         }
     };
 
-    handleNext = async () => {
-        const formInstance = this.formRef.current;
+    const next = async() => {
+        const formInstance = formRef.current;
 
         try {
             await formInstance.validateFields();
@@ -45,112 +40,106 @@ class Info extends React.Component {
             return;
         }
 
-        this.setState({
-            loading: true,
-        });
+        setLoading(true);
 
         try {
-            this.props.handleNext();
+            handleNext();
         } catch (error) {
             message.error(error.message);
         } finally {
-            this.setState({
-                loading: false,
-            });
+            setLoading(false);
         }
     };
 
-    onFinish = () => {
+    const onFinish = () => {
         console.log('Finish form');
     };
 
-    render() {
-        return (
-            <>
-                <Form
-                    labelCol={{
-                        span: 4,
-                    }}
-                    wrapperCol={{
-                        span: 20,
-                    }}
-                    initialValues={{
-                        remember: true,
-                    }}
-                    onFinish={this.onFinish}
-                    ref={this.formRef}
+    return (
+        <>
+            <Form
+                labelCol={{
+                    span: 4,
+                }}
+                wrapperCol={{
+                    span: 20,
+                }}
+                initialValues={{
+                    remember: true,
+                }}
+                onFinish={onFinish}
+                ref={formRef}
+            >
+                <Title level={3}>Enter Shipper Info</Title>
+                <Form.Item
+                    label="First Name"
+                    name="ShipperFirstName"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input the first name!',
+                        },
+                    ]}
                 >
-                    <Title level={3}>Enter Shipper Info</Title>
-                    <Form.Item
-                        label="First Name"
-                        name="ShipperFirstName"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input the first name!',
-                            },
-                        ]}
-                    >
-                        <Input placeholder="Please input shipper's first name" />
-                    </Form.Item>
-                    <Form.Item
-                        label="Last Name"
-                        name="ShipperLastName"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input the last name!',
-                            },
-                        ]}
-                    >
-                        <Input placeholder="Please input shipper's last name" />
-                    </Form.Item>
-                    <Title level={3}>Enter Recipient Info</Title>
-                    <Form.Item
-                        label="First Name"
-                        name="RecipientFirstName"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input the first name!',
-                            },
-                        ]}
-                    >
-                        <Input placeholder="Please input recipient's first name" />
-                    </Form.Item>
-                    <Form.Item
-                        label="Last Name"
-                        name="RecipientLastName"
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Please input the last name!',
-                            },
-                        ]}
-                    >
-                        <Input placeholder="Please input recipient's last name" />
-                    </Form.Item>
-                    <OrdSummary orderInfo={this.props.orderInfo} />
-                </Form>
-                <h1>
-                    <Button
-                        onClick={this.handlePrevious}
-                        disabled={this.state.loading}
-                        type="primary"
-                    >
-                        Back
-                    </Button>
-                    <Button
-                        onClick={this.handleNext}
-                        disabled={this.state.loading}
-                        type="primary"
-                    >
-                        Next
-                    </Button>
-                </h1>
-            </>
-        );
-    };
+                    <Input placeholder="Please input shipper's first name" />
+                </Form.Item>
+                <Form.Item
+                    label="Last Name"
+                    name="ShipperLastName"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input the last name!',
+                        },
+                    ]}
+                >
+                    <Input placeholder="Please input shipper's last name" />
+                </Form.Item>
+                <Title level={3}>Enter Recipient Info</Title>
+                <Form.Item
+                    label="First Name"
+                    name="RecipientFirstName"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input the first name!',
+                        },
+                    ]}
+                >
+                    <Input placeholder="Please input recipient's first name" />
+                </Form.Item>
+                <Form.Item
+                    label="Last Name"
+                    name="RecipientLastName"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input the last name!',
+                        },
+                    ]}
+                >
+                    <Input placeholder="Please input recipient's last name" />
+                </Form.Item>
+                <OrdSummary orderInfo={orderInfo} />
+            </Form>
+            <h1>
+                <Button
+                    onClick={back}
+                    disabled={loading}
+                    type="primary"
+                >
+                    Back
+                </Button>
+                <Button
+                    onClick={next}
+                    disabled={loading}
+                    type="primary"
+                >
+                    Next
+                </Button>
+            </h1>
+        </>
+    );
 };
 
 class OrdSummary extends React.Component {
@@ -212,14 +201,44 @@ class RouteMap extends React.Component {
 }
 
 class PlaceOrderPage extends React.Component {
+    state = {
+        loading: false,
+        data: [],
+    };
+
+    componentDidMount() {
+        this.loadData();
+    }
+
+    loadData = async () => {
+        this.setState({
+            loading: true,
+        });
+
+        try {
+            const resp = await getOrderHistory();
+            this.setState({
+                data: resp,
+            });
+            console.log(this.state.data);
+        } catch (error) {
+            message.error(error.message);
+        } finally {
+            this.setState({
+                loading: false,
+            })
+        }
+    };
+
     render() {
+        let dataLength = this.state.data.length;
         return (
             <Row className='main'>
                 <Col span={11} className="left-side">
-                    <Info handlePrevious={this.props.handlePrevious} handleNext={this.props.handleNext} orderInfo={this.props.orderInfo} />
+                    <Info handlePrevious={this.props.handlePrevious} handleNext={this.props.handleNext} orderInfo={this.state.data[dataLength - 1]} />
                 </Col>
                 <Col span={13} className="right-side">
-                    <RouteMap orderInfo={this.props.orderInfo} />
+                    <RouteMap orderInfo={this.state.data[dataLength - 1]} />
                 </Col>
             </Row>
         );

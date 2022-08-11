@@ -1,7 +1,6 @@
 const domain = "http://localhost:8080";
 
 export const getOrder = async (trackId) => {
-    const authToken = localStorage.getItem("authToken");
     const listCostUrl = `${domain}/track/${trackId}`;
 
     const response = await fetch(listCostUrl);
@@ -41,4 +40,21 @@ export const getCost = async (lon1, lat1, lon2, lat2, weight, size, device) => {
     }
     return await response.json();
 };
+
+export const getOrderHistory = () => {
+    const authToken = localStorage.getItem("authToken"); 
+    const orderHistoryUrl = `${domain}/user/historyorders`;
+
+    return fetch(orderHistoryUrl,  {
+        headers: {
+            Authorization: `Bearer ${authToken}`
+        }, 
+    }).then((response) => {
+        if (response.status !== 200) {
+            throw Error("Fail to track this order");
+        }
+        return response.json();
+    });
+};
+
 

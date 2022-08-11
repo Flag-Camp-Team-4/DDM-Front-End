@@ -48,7 +48,7 @@ class App extends React.Component {
     } else if (this.state.toOrderReviewPage) {
       return <OrderReviewPage />;
     } else {
-      return <PlaceOrderPage handlePrevious={this.handleShipPage} handleNext={this.handleOrderReviewPage} orderInfo={this.state.orderInfo} />;
+      return <PlaceOrderPage handlePrevious={this.handleShipPage} handleNext={this.handleOrderReviewPage}/>;
     }
   };
 
