@@ -68,9 +68,7 @@ class App extends React.Component {
         if(this.state.loading) {
             return <OrderReview/>
         }
-
-
-
+        
         return <Home />;
     };
 
