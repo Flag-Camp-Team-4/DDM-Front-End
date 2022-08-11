@@ -50,6 +50,12 @@ class App extends React.Component {
         })
     }
 
+    handleClickBackToMain = () => {
+        this.setState({
+            loading: false,
+        });
+    }
+
     renderContent = () => {
         if (!this.state.authed) {
             return <LoginPage handleLoginSuccess={this.handleLoginSuccess} />;
@@ -60,7 +66,7 @@ class App extends React.Component {
         }
 
         if(this.state.loading) {
-            return <OrderReview data={this.state.data}/>
+            return <OrderReview/>
         }
 
 
@@ -69,6 +75,7 @@ class App extends React.Component {
     };
 
     userMenu = (
+        
         <Menu>
             <Menu.Item key="logout" onClick={this.handleLogOut}>
                 Log Out
@@ -76,6 +83,10 @@ class App extends React.Component {
             <Menu.Item key="orderHistory" onClick={this.handleClickOrderHistory}>
                 Order History
             </Menu.Item>
+            <Menu.Item key="backToMain"  onClick={this.handleClickBackToMain}>
+                Back To Main
+            </Menu.Item>
+
         </Menu>
     );
 
