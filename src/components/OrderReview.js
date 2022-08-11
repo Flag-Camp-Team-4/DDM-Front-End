@@ -17,11 +17,13 @@ class OrderReview extends React.Component {
     componentDidMount() {
         this.handleHistoryOrder();
     }
+    
     onLoadMore = () => {
         this.setState({
             load:true,
         })
     }
+
     handleHistoryOrder = async() => {
         this.setState ({
             loading : true,

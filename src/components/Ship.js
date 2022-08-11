@@ -27,12 +27,14 @@ class Ship extends React.Component {
                 weight: values.weight
             }, this.state.deviceType);
             message.success("Successfully submitted order");
+            //this.props.handleToPlaceOrder();
         } catch (error) {
             message.error(error.message);
         } finally {
             this.setState({
                 loading: false
             });
+            this.props.handleToPlaceOrder();
         }
     };
 
@@ -191,6 +193,7 @@ class Ship extends React.Component {
                             <Radio value={"DRONE"}>Drone</Radio>
                         </Radio.Group>
                     </Form.Item>
+                    
                     <Form.Item>
                         <Button
                             type="primary"

@@ -30,7 +30,7 @@ class Home extends React.Component {
                         </TabPane>
                         <TabPane tab="Ship" key="2" className="shipForm">
                             {/* From address */}
-                            <Ship />
+                            <Ship handleToPlaceOrder={this.props.handleToPlaceOrder}/>
                         </TabPane>
                     </Tabs>
                 </div>

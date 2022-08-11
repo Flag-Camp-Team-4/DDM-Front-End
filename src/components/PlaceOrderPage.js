@@ -10,11 +10,11 @@ import {
     Image
 } from 'antd';
 import { useState } from "react";
-import { getOrderHistory } from "../utils";
+import { getHistoryOrder } from '../utils';
 
 const { Title } = Typography;
 
-function Info({ handleBack, handleNext, orderInfo }) {
+function Info({ orderInfo }) {
     let formRef = React.createRef();
 
     const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ function Info({ handleBack, handleNext, orderInfo }) {
         setLoading(true);
 
         try {
-            handleBack();
+            alert("Back!!!");
         } catch (error) {
             message.error(error.message);
         } finally {
@@ -31,7 +31,7 @@ function Info({ handleBack, handleNext, orderInfo }) {
         }
     };
 
-    const next = async() => {
+    const next = async () => {
         const formInstance = formRef.current;
 
         try {
@@ -43,7 +43,7 @@ function Info({ handleBack, handleNext, orderInfo }) {
         setLoading(true);
 
         try {
-            handleNext();
+            alert("Next!!!");
         } catch (error) {
             message.error(error.message);
         } finally {
@@ -149,7 +149,7 @@ class OrdSummary extends React.Component {
 
     fee = this.props.orderInfo.price;
     tax = this.fee * 0.06625;
-    total = this.fee + this.tax;   
+    total = this.fee + this.tax;
 
     onFinish = (values) => {
         console.log('Success:', values);
@@ -201,44 +201,15 @@ class RouteMap extends React.Component {
 }
 
 class PlaceOrderPage extends React.Component {
-    state = {
-        loading: false,
-        data: [],
-    };
-
-    componentDidMount() {
-        this.loadData();
-    }
-
-    loadData = async () => {
-        this.setState({
-            loading: true,
-        });
-
-        try {
-            const resp = await getOrderHistory();
-            this.setState({
-                data: resp,
-            });
-            console.log(this.state.data);
-        } catch (error) {
-            message.error(error.message);
-        } finally {
-            this.setState({
-                loading: false,
-            })
-        }
-    };
-
     render() {
-        let dataLength = this.state.data.length;
+        let orderInfosLength = this.props.orderInfos.length;
         return (
             <Row className='main'>
                 <Col span={11} className="left-side">
-                    <Info handlePrevious={this.props.handlePrevious} handleNext={this.props.handleNext} orderInfo={this.state.data[dataLength - 1]} />
+                    <Info orderInfo={this.props.orderInfos[orderInfosLength - 1]} />
                 </Col>
                 <Col span={13} className="right-side">
-                    <RouteMap orderInfo={this.state.data[dataLength - 1]} />
+                    <RouteMap orderInfo={this.props.orderInfos[orderInfosLength - 1]} />
                 </Col>
             </Row>
         );

@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import StaffPage from "./components/StaffPage";
 import OrderReview from "./components/OrderReview"
 import { getHistoryOrder } from "./utils";
+import PlaceOrderPage from "./components/PlaceOrderPage";
 
 const { Header, Content } = Layout;
 
@@ -14,16 +15,36 @@ class App extends React.Component {
         authed: false,
         asStaff: false,
         loading: false,
-        data:[],
+        toPlaceOrder: false,
+        data: [],
+        orderInfos: []
     };
 
     componentDidMount() {
         const authToken = localStorage.getItem("authToken");
         const asStaff = localStorage.getItem("asStaff") === "true";
         this.setState({
-            authed: authToken !== null,
+            authed: false,
             asStaff: asStaff,
         });
+    }
+
+    handleHistoryOrder = async () => {
+        this.setState({
+            loading: true,
+        });
+        try {
+            const resp = await getHistoryOrder();
+            this.setState({
+                orderInfos: resp,
+            });
+        } catch (error) {
+            message.error(error.message);
+        } finally {
+            this.setState({
+                loading: false,
+            });
+        }
     }
 
     handleLoginSuccess = (token, asStaff) => {
@@ -50,9 +71,17 @@ class App extends React.Component {
         })
     }
 
+    handleToPlaceOrder = () => {
+        this.handleHistoryOrder();
+        this.setState( {
+            toPlaceOrder: true,
+        })
+    }
+
     handleClickBackToMain = () => {
         this.setState({
             loading: false,
+            toPlaceOrder: false
         });
     }
 
@@ -66,10 +95,14 @@ class App extends React.Component {
         }
 
         if(this.state.loading) {
-            return <OrderReview/>
+            return <OrderReview/>;
         }
 
-        return <Home />;
+        if(this.state.toPlaceOrder) {
+            return <PlaceOrderPage orderInfos={this.state.orderInfos}/>;
+        }
+
+        return <Home handleToPlaceOrder={this.handleToPlaceOrder}/>;
     };
 
     userMenu = (
