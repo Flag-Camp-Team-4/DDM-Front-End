@@ -1,4 +1,4 @@
-import { Layout, Dropdown, Menu, Button,message } from "antd";
+import { Layout, Dropdown, Menu, Button, message } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import React from "react";
 import LoginPage from "./components/LoginPage";
@@ -68,12 +68,11 @@ class App extends React.Component {
         if(this.state.loading) {
             return <OrderReview/>
         }
-        
+
         return <Home />;
     };
 
     userMenu = (
-        
         <Menu>
             <Menu.Item key="logout" onClick={this.handleLogOut}>
                 Log Out
@@ -84,7 +83,6 @@ class App extends React.Component {
             <Menu.Item key="backToMain"  onClick={this.handleClickBackToMain}>
                 Back To Main
             </Menu.Item>
-
         </Menu>
     );
 

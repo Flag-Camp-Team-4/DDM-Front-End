@@ -52,7 +52,7 @@ export const submitOrder = (data, deviceType) => {
     return fetch(orderGenUrl, {
         method: "POST",
         headers: {
-            Authorization: `Bearer ${authToken}`, 
+            Authorization: `Bearer ${authToken}`,
             "Content-Type": "application/json"
         },
         body: JSON.stringify(data)
@@ -71,13 +71,19 @@ export const getHistoryOrder = () => {
     const getHistoryOrderUrl = `${domain}/user/historyorders`;
 
     return fetch(getHistoryOrderUrl, {
-        headers:{
+        headers: {
             Authorization: `Bearer ${authToken}`,
         }
     }).then((response) => {
-        if(response.status !== 200) {
+        if (response.status !== 200) {
             throw Error("Fail to get order History");
         }
         return response.json();
     })
 }
+
+export const getEta = (sending_address, receiving_address) => {
+}
+
+
+
