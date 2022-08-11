@@ -2,13 +2,14 @@ import 'antd/dist/antd.css';
 import React from "react";
 import { Tabs, Button, Form, Input, message, InputNumber, Card, Radio } from "antd";
 import { trackOrder, submitOrder } from "../utils";
+import Track from './Track'; 
+import Ship from './Ship'; 
 
 const { TabPane } = Tabs;
 
 const onChange = (key) => {
     console.log(key);
 };
-
 
 class Home extends React.Component {
     render() {
@@ -28,7 +29,6 @@ class Home extends React.Component {
                             <Track />
                         </TabPane>
                         <TabPane tab="Ship" key="2" className="shipForm">
-
                             {/* From address */}
                             <Ship />
                         </TabPane>
