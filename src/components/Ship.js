@@ -10,7 +10,6 @@ class Ship extends React.Component {
     };
 
     handleRadioOnChange = (e) => {
-        // const [value, deviceType] = useState("ROBOT");
         this.setState({
             deviceType: e.target.value
         })
@@ -37,7 +36,6 @@ class Ship extends React.Component {
     };
 
     handleGetEta = async (values) => {
-
         var sendAddr = "";
         var receAddr = "";
         var weight = 0;
@@ -66,7 +64,6 @@ class Ship extends React.Component {
             sendAddr = values.sending_address;
             receAddr = values.receiving_address;
             weight = values.weight;
-
             var packageInfo = [sendAddr, receAddr, weight];
 
         } catch (error) {
@@ -195,7 +192,7 @@ class Ship extends React.Component {
                             </div>
                             <div>
                                 <Image
-                                    width={500}
+                                    width={270}
                                     // height={500}
                                     // 从父component传入order的信息
                                     src={imgSrc}
@@ -262,7 +259,9 @@ class Ship extends React.Component {
                         <Button
                             type="primary"
                             htmlType="submit"
-                            loading={this.state.loading}>
+                            loading={this.state.loading}
+                            
+                            >
                             Submit
                         </Button>
                     </Form.Item>
