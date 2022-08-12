@@ -27,21 +27,18 @@ class Ship extends React.Component {
                 weight: values.weight
             }, this.state.deviceType);
             message.success("Successfully submitted order");
+            //this.props.handleToPlaceOrder();
         } catch (error) {
             message.error(error.message);
         } finally {
             this.setState({
                 loading: false
             });
+            this.props.handleToPlaceOrder();
         }
     };
 
     handleGetEta = async (values) => {
-
-        var sendAddr = "";
-        var receAddr = "";
-        var weight = 0;
-
         this.setState({
             loading: true,
         });
@@ -49,19 +46,11 @@ class Ship extends React.Component {
         try {
             const resp = await getEta({
                 sending_address: values.sending_address,
-                receiving_address: values.receiving_address,
-                weight: values.weight,
+                receiving_address: values.receiving_address
             });
-
             this.setState({
                 data: resp
             });
-
-            sendAddr = values.sending_address;
-            receAddr = values.receiving_address;
-            weight = values.weight;
-            var packageInfo = [sendAddr, receAddr, weight];
-
         } catch (error) {
             message.error(error.message);
         } finally {
@@ -69,7 +58,6 @@ class Ship extends React.Component {
                 loading: false
             });
         }
-        return packageInfo;
     };
 
     hourMinutesTime = (minutesTime) => {
@@ -92,12 +80,10 @@ class Ship extends React.Component {
         const { data, loading } = this.state;
         var pickUpTime = [];
         var deliveryTime = [];
-        var cost = [];
 
         if (data !== undefined) {
             pickUpTime = data.pick_up_time;
             deliveryTime = data.delivery_time;
-            cost = data.cost;
         }
 
         return (
@@ -133,19 +119,6 @@ class Ship extends React.Component {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item
-                            label="Weight (lb)"
-                            name="weight"
-                            rules={[
-                                {
-                                    required: true,
-                                    type: "number",
-                                    message: "Please input package weight. "
-                                },
-                            ]}>
-                            <InputNumber />
-                        </Form.Item>
-
                         <Form.Item>
                             <Button
                                 type="primary"
@@ -163,15 +136,10 @@ class Ship extends React.Component {
                         loading={loading}
                         title={"Shipping Estimation"}
                         style={{ width: "75%", margin: "auto" }}>
-                        <h3 style={{ color: "#002f80" }}>Robot</h3>
-                        <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[0])}</p>
-                        <p>Pick up time ETA: {this.hourMinutesTime(pickUpTime[0])}</p>
-                        <p>Cost: {cost[0]}</p>
-
-                        <h3 style={{ color: "#704000" }}>Drone</h3>
-                        <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[1])}</p>
-                        <p>Pick up time ETA: {this.hourMinutesTime(pickUpTime[1])}</p>
-                        <p>Cost: {cost[1]}</p>
+                        <p>Robot delivery time ETA: {this.hourMinutesTime(deliveryTime[0])}</p>
+                        <p>Robot pick up time ETA: {this.hourMinutesTime(pickUpTime[0])}</p>
+                        <p>Drone delivery time ETA: {this.hourMinutesTime(deliveryTime[1])}</p>
+                        <p>Drone pick up time ETA: {this.hourMinutesTime(pickUpTime[1])}</p>
                     </Card>
                 </div>
 
@@ -225,6 +193,7 @@ class Ship extends React.Component {
                             <Radio value={"DRONE"}>Drone</Radio>
                         </Radio.Group>
                     </Form.Item>
+                    
                     <Form.Item>
                         <Button
                             type="primary"
