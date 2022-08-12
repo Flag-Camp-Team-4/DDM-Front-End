@@ -15,26 +15,6 @@ class Ship extends React.Component {
         })
     }
 
-    handleSubmit = async (values) => {
-        this.setState({
-            loading: true,
-        });
-        try {
-            await submitOrder({
-                sending_address: values.sending_address,
-                receiving_address: values.receiving_address,
-                weight: values.weight
-            }, this.state.deviceType);
-            message.success("Successfully submitted order");
-        } catch (error) {
-            message.error(error.message);
-        } finally {
-            this.setState({
-                loading: false
-            });
-        }
-    };
-
     handleGetEta = async (values) => {
         var sendAddr = "";
         var receAddr = "";
@@ -91,6 +71,10 @@ class Ship extends React.Component {
         return addrInput;
     }
 
+    renderSubmitForm = () => {
+        return <SubmitForm />
+    }
+
 
     render() {
         const { data, imgData, loading } = this.state;
@@ -104,7 +88,6 @@ class Ship extends React.Component {
             deliveryTime = data.delivery_time;
             cost = data.cost;
         }
-        console.log(imgSrc);
 
         return (
             <div>
@@ -158,6 +141,7 @@ class Ship extends React.Component {
 
                         <Form.Item>
                             <Button
+                                id='getEtaBtn'
                                 type="primary"
                                 htmlType="submit"
                                 loading={this.state.loading}
@@ -178,7 +162,7 @@ class Ship extends React.Component {
                             margin: "auto",
                         }}
                     >
-                        <div style={{ display: "flex", justifyContent: "space-between"}}>
+                        <div style={{ display: "flex", justifyContent: "space-between" }}>
                             <div>
                                 <h3 style={{ color: "#002f80" }}>Robot</h3>
                                 <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[0])}</p>
@@ -201,8 +185,43 @@ class Ship extends React.Component {
                         </div>
                     </Card>
                 </div>
-
                 <br />
+                {<SubmitForm />}
+
+            </div>
+        );
+    }
+}
+
+export class SubmitForm extends React.Component {
+
+    state = {
+        loading: false
+    };
+
+    handleSubmit = async (values) => {
+        this.setState({
+            loading: true,
+        });
+        try {
+            await submitOrder({
+                sending_address: values.sending_address,
+                receiving_address: values.receiving_address,
+                weight: values.weight
+            }, this.state.deviceType);
+            message.success("Successfully submitted order");
+        } catch (error) {
+            message.error(error.message);
+        } finally {
+            this.setState({
+                loading: false
+            });
+        }
+    };
+
+    render() {
+        return (
+            <div>
                 <h2 style={{ textAlign: "center" }}>Input shipping info</h2>
                 <Form
                     onFinish={this.handleSubmit}
@@ -260,13 +279,12 @@ class Ship extends React.Component {
                             type="primary"
                             htmlType="submit"
                             loading={this.state.loading}
-                            
-                            >
+
+                        >
                             Submit
                         </Button>
                     </Form.Item>
                 </Form>
-
             </div>
         );
     }
