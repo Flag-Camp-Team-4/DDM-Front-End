@@ -37,6 +37,11 @@ class Ship extends React.Component {
     };
 
     handleGetEta = async (values) => {
+
+        var sendAddr = "";
+        var receAddr = "";
+        var weight = 0;
+
         this.setState({
             loading: true,
         });
@@ -44,12 +49,20 @@ class Ship extends React.Component {
         try {
             const resp = await getEta({
                 sending_address: values.sending_address,
-                receiving_address: values.receiving_address, 
-                weight: values.weight, 
+                receiving_address: values.receiving_address,
+                weight: values.weight,
             });
+
             this.setState({
                 data: resp
             });
+
+            sendAddr = values.sending_address;
+            receAddr = values.receiving_address;
+            weight = values.weight;
+
+            var packageInfo = [sendAddr, receAddr, weight];
+
         } catch (error) {
             message.error(error.message);
         } finally {
@@ -57,6 +70,7 @@ class Ship extends React.Component {
                 loading: false
             });
         }
+        return packageInfo;
     };
 
     hourMinutesTime = (minutesTime) => {
@@ -150,12 +164,12 @@ class Ship extends React.Component {
                         loading={loading}
                         title={"Shipping Estimation"}
                         style={{ width: "75%", margin: "auto" }}>
-                        <h3 style={{color: "#002f80"}}>Robot</h3>
+                        <h3 style={{ color: "#002f80" }}>Robot</h3>
                         <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[0])}</p>
                         <p>Pick up time ETA: {this.hourMinutesTime(pickUpTime[0])}</p>
                         <p>Cost: {cost[0]}</p>
 
-                        <h3 style={{color: "#704000"}}>Drone</h3>
+                        <h3 style={{ color: "#704000" }}>Drone</h3>
                         <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[1])}</p>
                         <p>Pick up time ETA: {this.hourMinutesTime(pickUpTime[1])}</p>
                         <p>Cost: {cost[1]}</p>
