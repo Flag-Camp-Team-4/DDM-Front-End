@@ -10,7 +10,6 @@ import {
     Image
 } from 'antd';
 import { useState } from "react";
-import { getHistoryOrder } from '../utils';
 
 const { Title } = Typography;
 
@@ -194,7 +193,7 @@ class RouteMap extends React.Component {
         return (
             <Image
                 width={550}
-                src={`https://www.mapquestapi.com/staticmap/v5/map?start=${this.props.orderInfo.sending_address}&end=${this.props.orderInfo.receiving_address}&size=@2x&key=xAGEknEZgp2cweVEAI9RGBYxwGU88prC`}
+                src={`https://www.mapquestapi.com/staticmap/v5/map?start=${this.props.orderInfo.sendingAddress}&end=${this.props.orderInfo.receivingAddress}&size=@2x&key=xAGEknEZgp2cweVEAI9RGBYxwGU88prC`}
             />
         )
     }
@@ -203,13 +202,14 @@ class RouteMap extends React.Component {
 class PlaceOrderPage extends React.Component {
     render() {
         let orderInfosLength = this.props.orderInfos.length;
+        const res = this.props.orderInfos[orderInfosLength - 1];
         return (
             <Row className='main'>
                 <Col span={11} className="left-side">
-                    <Info orderInfo={this.props.orderInfos[orderInfosLength - 1]} />
+                    <Info orderInfo={res} />
                 </Col>
                 <Col span={13} className="right-side">
-                    <RouteMap orderInfo={this.props.orderInfos[orderInfosLength - 1]} />
+                    <RouteMap orderInfo={res} />
                 </Col>
             </Row>
         );
