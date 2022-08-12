@@ -1,3 +1,19 @@
+.ant-row {
+    margin: 20px;
+}
+
+.ant-form {
+    margin: 0;
+    padding: 0;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none;
+    font-feature-settings: 'tnum', "tnum";
+    margin-bottom: 70px;
+}
+
 .ant-col-14 {
     display: flex;
     flex: 0 0 58.33333333%;
@@ -8,21 +24,8 @@
     align-items: center;
 }
 
-p {
-    margin-top: 0;
-    margin-bottom: 1em;
-    display: flex;
-    justify-content: space-between;
-}
-
-.ant-form {
-    margin-bottom: 50px;
-}
-
 .ant-col-13 {
     display: flex;
-    flex: 0 0 54.16666667%;
-    max-width: 54.16666667%;
     align-items: center;
     justify-content: space-around;
 }
