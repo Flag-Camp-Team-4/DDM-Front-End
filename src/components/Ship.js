@@ -1,7 +1,7 @@
 import 'antd/dist/antd.css';
-import React, { version } from "react";
-import { message, InputNumber, Button, Form, Input, Radio, Card } from "antd";
-import { submitOrder, getEta } from "../utils";
+import React from "react";
+import { message, InputNumber, Button, Form, Input, Radio, Card, Image } from "antd";
+import { submitOrder, getEta, getRouteImg } from "../utils";
 
 class Ship extends React.Component {
 
@@ -53,8 +53,14 @@ class Ship extends React.Component {
                 weight: values.weight,
             });
 
+            const imgResp = await getRouteImg({
+                sending_address: values.sending_address,
+                receiving_address: values.receiving_address,
+            });
+
             this.setState({
-                data: resp
+                data: resp,
+                imgData: imgResp
             });
 
             sendAddr = values.sending_address;
@@ -90,16 +96,18 @@ class Ship extends React.Component {
 
 
     render() {
-        const { data, loading } = this.state;
+        const { data, imgData, loading } = this.state;
         var pickUpTime = [];
         var deliveryTime = [];
         var cost = [];
+        var imgSrc = imgData;
 
         if (data !== undefined) {
             pickUpTime = data.pick_up_time;
             deliveryTime = data.delivery_time;
             cost = data.cost;
         }
+        console.log(imgSrc);
 
         return (
             <div>
@@ -108,7 +116,8 @@ class Ship extends React.Component {
                     <Form
                         name="nest-messages"
                         onFinish={this.handleGetEta}
-                        style={{ width: "75%", margin: "auto" }}>
+                        style={{ width: "75%", margin: "auto" }}
+                    >
                         <h3>From</h3>
                         <Form.Item
                             name="sending_address"
@@ -117,7 +126,8 @@ class Ship extends React.Component {
                                 {
                                     required: true,
                                     message: "Please input street address. "
-                                }]}>
+                                }]}
+                        >
                             <Input />
                         </Form.Item>
 
@@ -130,7 +140,8 @@ class Ship extends React.Component {
                                     required: true,
                                     message: "Please input street address. "
                                 },
-                            ]}>
+                            ]}
+                        >
                             <Input />
                         </Form.Item>
 
@@ -143,7 +154,8 @@ class Ship extends React.Component {
                                     type: "number",
                                     message: "Please input package weight. "
                                 },
-                            ]}>
+                            ]}
+                        >
                             <InputNumber />
                         </Form.Item>
 
@@ -151,7 +163,8 @@ class Ship extends React.Component {
                             <Button
                                 type="primary"
                                 htmlType="submit"
-                                loading={this.state.loading}>
+                                loading={this.state.loading}
+                            >
                                 Get ETA
                             </Button>
                         </Form.Item>
@@ -163,16 +176,32 @@ class Ship extends React.Component {
                     <Card
                         loading={loading}
                         title={"Shipping Estimation"}
-                        style={{ width: "75%", margin: "auto" }}>
-                        <h3 style={{ color: "#002f80" }}>Robot</h3>
-                        <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[0])}</p>
-                        <p>Pick up time ETA: {this.hourMinutesTime(pickUpTime[0])}</p>
-                        <p>Cost: {cost[0]}</p>
+                        style={{
+                            width: "75%",
+                            margin: "auto",
+                        }}
+                    >
+                        <div style={{ display: "flex", justifyContent: "space-between"}}>
+                            <div>
+                                <h3 style={{ color: "#002f80" }}>Robot</h3>
+                                <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[0])}</p>
+                                <p>Pick up time ETA: {this.hourMinutesTime(pickUpTime[0])}</p>
+                                <p>Cost: {cost[0]}</p>
 
-                        <h3 style={{ color: "#704000" }}>Drone</h3>
-                        <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[1])}</p>
-                        <p>Pick up time ETA: {this.hourMinutesTime(pickUpTime[1])}</p>
-                        <p>Cost: {cost[1]}</p>
+                                <h3 style={{ color: "#704000" }}>Drone</h3>
+                                <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[1])}</p>
+                                <p>Pick up time ETA: {this.hourMinutesTime(pickUpTime[1])}</p>
+                                <p>Cost: {cost[1]}</p>
+                            </div>
+                            <div>
+                                <Image
+                                    width={500}
+                                    // height={500}
+                                    // 从父component传入order的信息
+                                    src={imgSrc}
+                                />
+                            </div>
+                        </div>
                     </Card>
                 </div>
 
@@ -190,7 +219,8 @@ class Ship extends React.Component {
                             {
                                 required: true,
                                 message: "Please input street address. "
-                            }]}>
+                            }]}
+                    >
                         <Input />
                     </Form.Item>
 
@@ -203,7 +233,8 @@ class Ship extends React.Component {
                                 required: true,
                                 message: "Please input street address. "
                             },
-                        ]}>
+                        ]}
+                    >
                         <Input />
                     </Form.Item>
 
@@ -216,7 +247,8 @@ class Ship extends React.Component {
                                 type: "number",
                                 message: "Please input package weight. "
                             },
-                        ]}>
+                        ]}
+                    >
                         <InputNumber />
                     </Form.Item>
 

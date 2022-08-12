@@ -47,6 +47,12 @@ export const trackOrder = (order) => {
 };
 
 
+export const getRouteImg = (address) => {
+    const mapquestUrl = `https://www.mapquestapi.com/staticmap/v5/map?start=${address.sending_address}&end=${address.receiving_address}&key=xAGEknEZgp2cweVEAI9RGBYxwGU88prC`; 
+
+    return mapquestUrl; 
+}
+
 export const submitOrder = (data, deviceType) => {
     const authToken = localStorage.getItem("authToken");
     const orderGenUrl = `${domain}/order/${deviceType}`;
