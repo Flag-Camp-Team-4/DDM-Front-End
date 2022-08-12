@@ -5,8 +5,9 @@ import LoginPage from "./components/LoginPage";
 import Home from "./components/Home";
 import StaffPage from "./components/StaffPage";
 import OrderReview from "./components/OrderReview"
-import { getHistoryOrder } from "./utils";
 import PlaceOrderPage from "./components/PlaceOrderPage";
+import OrderReviewPage from "./components/OrderReviewPage";
+import { getHistoryOrder } from "./utils";
 
 const { Header, Content } = Layout;
 
@@ -16,6 +17,8 @@ class App extends React.Component {
         asStaff: false,
         loading: false,
         toPlaceOrder: false,
+        toOrderReviewPage: false,
+        toShipPage: false,
         data: [],
         orderInfos: []
     };
@@ -78,6 +81,13 @@ class App extends React.Component {
         })
     }
 
+    handleToOrderReviewPage = () => {
+        this.setState( {
+            toPlaceOrder: false,
+            toOrderReviewPage: true,
+        })
+    }
+
     handleClickBackToMain = () => {
         this.setState({
             loading: false,
@@ -99,7 +109,11 @@ class App extends React.Component {
         }
 
         if(this.state.toPlaceOrder) {
-            return <PlaceOrderPage orderInfos={this.state.orderInfos}/>;
+            return <PlaceOrderPage orderInfos={this.state.orderInfos} handleToOrderReviewPage={this.handleToOrderReviewPage}/>;
+        }
+
+        if(this.state.toOrderReviewPage) {
+            return <OrderReviewPage orderInfos={this.state.orderInfos}/>;
         }
 
         return <Home handleToPlaceOrder={this.handleToPlaceOrder}/>;

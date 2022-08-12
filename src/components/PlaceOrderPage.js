@@ -13,7 +13,7 @@ import { useState } from "react";
 
 const { Title } = Typography;
 
-function Info({ orderInfo }) {
+function Info({ orderInfo, handleToOrderReviewPage }) {
     let formRef = React.createRef();
 
     const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ function Info({ orderInfo }) {
         setLoading(true);
 
         try {
-            alert("Back!!!");
+            alert("Cannot go back");
         } catch (error) {
             message.error(error.message);
         } finally {
@@ -42,7 +42,7 @@ function Info({ orderInfo }) {
         setLoading(true);
 
         try {
-            alert("Next!!!");
+            handleToOrderReviewPage();
         } catch (error) {
             message.error(error.message);
         } finally {
@@ -206,7 +206,7 @@ class PlaceOrderPage extends React.Component {
         return (
             <Row className='main'>
                 <Col span={11} className="left-side">
-                    <Info orderInfo={res} />
+                    <Info orderInfo={res} handleToOrderReviewPage={this.props.handleToOrderReviewPage}/>
                 </Col>
                 <Col span={13} className="right-side">
                     <RouteMap orderInfo={res} />
