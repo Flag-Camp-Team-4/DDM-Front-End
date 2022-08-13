@@ -1,0 +1,53 @@
+.ant-row {
+    margin: 20px;
+}
+
+.ant-form {
+    margin: 0;
+    padding: 0;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5715;
+    list-style: none;
+    font-feature-settings: 'tnum', "tnum";
+    margin-bottom: 70px;
+}
+
+.ant-col-14 {
+    display: flex;
+    flex: 0 0 58.33333333%;
+    max-width: 58.33333333%;
+    flex-direction: row;
+    align-content: flex-start;
+    justify-content: center;
+    align-items: center;
+}
+
+.ant-col-13 {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1em;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 15px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    display: flex;
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    color: rgba(0, 0, 0, 0.85);
+    font-weight: 500;
+    justify-content: space-between;
+}

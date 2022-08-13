@@ -252,6 +252,7 @@ class Ship extends React.Component {
                             <Radio value={"DRONE"}>Drone</Radio>
                         </Radio.Group>
                     </Form.Item>
+                    
                     <Form.Item>
                         <Button
                             type="primary"
