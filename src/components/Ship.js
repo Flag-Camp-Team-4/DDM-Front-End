@@ -71,9 +71,25 @@ class Ship extends React.Component {
         return addrInput;
     }
 
-    renderSubmitForm = () => {
-        return <SubmitForm />
-    }
+    handleSubmit = async (values) => {
+        this.setState({
+            loading: true,
+        });
+        try {
+            await submitOrder({
+                sending_address: values.sending_address,
+                receiving_address: values.receiving_address,
+                weight: values.weight
+            }, this.state.deviceType);
+            message.success("Successfully submitted order");
+        } catch (error) {
+            message.error(error.message);
+        } finally {
+            this.setState({
+                loading: false
+            });
+        }
+    };
 
 
     render() {
@@ -153,7 +169,6 @@ class Ship extends React.Component {
                 </div>
 
                 {/* ETA display card */}
-                <div>
                     <Card
                         loading={loading}
                         title={"Shipping Estimation"}
@@ -184,44 +199,7 @@ class Ship extends React.Component {
                             </div>
                         </div>
                     </Card>
-                </div>
                 <br />
-                {<SubmitForm />}
-
-            </div>
-        );
-    }
-}
-
-export class SubmitForm extends React.Component {
-
-    state = {
-        loading: false
-    };
-
-    handleSubmit = async (values) => {
-        this.setState({
-            loading: true,
-        });
-        try {
-            await submitOrder({
-                sending_address: values.sending_address,
-                receiving_address: values.receiving_address,
-                weight: values.weight
-            }, this.state.deviceType);
-            message.success("Successfully submitted order");
-        } catch (error) {
-            message.error(error.message);
-        } finally {
-            this.setState({
-                loading: false
-            });
-        }
-    };
-
-    render() {
-        return (
-            <div>
                 <h2 style={{ textAlign: "center" }}>Input shipping info</h2>
                 <Form
                     onFinish={this.handleSubmit}
@@ -289,5 +267,6 @@ export class SubmitForm extends React.Component {
         );
     }
 }
+
 
 export default Ship; 
