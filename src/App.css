@@ -3,8 +3,7 @@
 
 .ant-layout-content {
   background-image: url("wallhaven-9ml1xk.png");
-  background-attachment: fixed;
-  background-size: 100%;
+  background-size: cover;
 }
 
 /* .App-logo {

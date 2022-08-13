@@ -19,7 +19,6 @@ class Track extends React.Component {
             this.setState({
                 data: resp,
             });
-            console.log(this.state.data);
         } catch (error) {
             message.error(error.message);
         } finally {
@@ -27,6 +26,7 @@ class Track extends React.Component {
                 loading: false,
             })
         }
+        console.log(this.state.data)
     };
 
     render() {
@@ -35,7 +35,6 @@ class Track extends React.Component {
         for (var i in data) {
             trackResult.push(data[i]);
         }
-        // const weight = Json.
         return (
             <div style={{ width: "75%", margin: "auto" }}>
                 <Form
@@ -66,12 +65,13 @@ class Track extends React.Component {
                     loading={loading}
                     title={"Track Result"}
                     style={{ width: "90%", margin: "auto" }}>
+                    <p> Status: {trackResult[5]}</p>
                     <p> Track Number: {trackResult[0]}</p>
                     <p> Weight: {trackResult[1]}</p>
                     <p> Price: {trackResult[2]}</p>
                     <p> Sending Address: {trackResult[3]}</p>
                     <p> Receiving Address: {trackResult[4]}</p>
-                    <p> Order: {trackResult[5]}</p>
+                    <p> Order: {trackResult[6]}</p>
                 </Card>
                 <br />
             </div>

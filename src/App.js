@@ -1,10 +1,12 @@
-import { Layout, Dropdown, Menu, Button } from "antd";
+import { message, Layout, Dropdown, Menu, Button } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import React from "react";
 import LoginPage from "./components/LoginPage";
 import Home from "./components/Home";
 import StaffPage from "./components/StaffPage";
+import { getHistoryOrder } from "./utils";
 import OrderReview from "./components/OrderReview"
+import PlaceOrderPage from "./components/PlaceOrderPage";
 
 
 const { Header, Content } = Layout;
@@ -13,6 +15,12 @@ class App extends React.Component {
     state = {
         authed: false,
         asStaff: false,
+        loading: false, 
+        toPlaceOrder: false,
+        toOrderReviewPage: false,
+        toShipPage: false,
+        data: [], 
+        orderInfos: [], 
     };
 
     componentDidMount() {
@@ -41,6 +49,44 @@ class App extends React.Component {
         });
     };
 
+    handleHistoryOrder = async () => {
+        this.setState({
+            loading: true,
+        });
+        try {
+            const resp = await getHistoryOrder();
+            this.setState({
+                orderInfos: resp,
+            });
+        } catch (error) {
+            message.error(error.message);
+        } finally {
+            this.setState({
+                loading: false,
+            });
+        }
+    }; 
+
+    handleToPlaceOrder = () => {
+        this.handleHistoryOrder();
+        this.setState( {
+            toPlaceOrder: true,
+        })
+    }
+
+    handleClickOrderHistory = () => {
+        this.setState( {
+            loading: true,
+        })
+    }
+
+    handleClickBackToMain = () => {
+        this.setState({
+            loading: false,
+            toPlaceOrder: false
+        });
+    }
+
     renderContent = () => {
         if (!this.state.authed) {
             return <LoginPage handleLoginSuccess={this.handleLoginSuccess} />;
@@ -48,6 +94,14 @@ class App extends React.Component {
 
         if (this.state.asStaff) {
             return <StaffPage />;
+        }
+
+        if(this.state.loading) {
+            return <OrderReview/>;
+        }
+
+        if(this.state.toPlaceOrder) {
+            return <PlaceOrderPage orderInfos={this.state.orderInfos} handleToOrderReviewPage={this.handleToOrderReviewPage}/>;
         }
 
         return <Home />;
@@ -58,7 +112,7 @@ class App extends React.Component {
             <Menu.Item key="logout" onClick={this.handleLogOut}>
                 Log Out
             </Menu.Item>
-            <Menu.Item key="orderHistory">
+            <Menu.Item key="orderHistory" onClick={this.handleClickOrderHistory}>
                 Order History
             </Menu.Item>
         </Menu>
@@ -74,13 +128,22 @@ class App extends React.Component {
                     }}>
                         Despatch & Delivery Managment
                     </h1>
+                    <div style={{display: "flex", marginRight: "30px"}}>
+                    <div>
+                    <Button
+                        onClick={this.handleClickBackToMain}
+                        >
+                            Home
+                    </Button>
+                    </div>
                     {this.state.authed && (
-                        <div style={{ marginRight: "20px" }}>
+                        <div style={{marginLeft: "20px"}}>
                             <Dropdown trigger="click" overlay={this.userMenu}>
                                 <Button icon={<UserOutlined />} shape="circle" />
                             </Dropdown>
                         </div>
                     )}
+                    </div>
                 </Header>
                 <Content
                     style={{ height: "calc(100% - 64px)", overflow: "auto" }}>

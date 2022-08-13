@@ -1,4 +1,4 @@
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 import React from "react";
 import { message, InputNumber, Button, Form, Input, Radio, Card, Image } from "antd";
 import { submitOrder, getEta, getRouteImg } from "../utils";
@@ -6,7 +6,8 @@ import { submitOrder, getEta, getRouteImg } from "../utils";
 class Ship extends React.Component {
 
     state = {
-        loading: false
+        loading: false, 
+        addrInfo: [], 
     };
 
     handleRadioOnChange = (e) => {
@@ -16,10 +17,6 @@ class Ship extends React.Component {
     }
 
     handleGetEta = async (values) => {
-        var sendAddr = "";
-        var receAddr = "";
-        var weight = 0;
-
         this.setState({
             loading: true,
         });
@@ -38,14 +35,13 @@ class Ship extends React.Component {
 
             this.setState({
                 data: resp,
-                imgData: imgResp
+                imgData: imgResp, 
+                addrInfo: {
+                    sending_address: values.sending_address, 
+                    receiving_address: values.receiving_address, 
+                    weight: values.weight, 
+                }, 
             });
-
-            sendAddr = values.sending_address;
-            receAddr = values.receiving_address;
-            weight = values.weight;
-            var packageInfo = [sendAddr, receAddr, weight];
-
         } catch (error) {
             message.error(error.message);
         } finally {
@@ -53,7 +49,6 @@ class Ship extends React.Component {
                 loading: false
             });
         }
-        return packageInfo;
     };
 
     hourMinutesTime = (minutesTime) => {
@@ -64,22 +59,16 @@ class Ship extends React.Component {
         return hour + "h " + minute + "m";
     }
 
-    getInput = async (values) => {
-        var addrInput = [];
-        addrInput.push(values.sending_address);
-        addrInput.push(values.receiving_address);
-        return addrInput;
-    }
-
     handleSubmit = async (values) => {
+        const data = this.state.addrInfo; 
         this.setState({
             loading: true,
         });
         try {
             await submitOrder({
-                sending_address: values.sending_address,
-                receiving_address: values.receiving_address,
-                weight: values.weight
+                sending_address: data.sending_address,
+                receiving_address: data.receiving_address,
+                weight: data.weight, 
             }, this.state.deviceType);
             message.success("Successfully submitted order");
         } catch (error) {
@@ -180,72 +169,30 @@ class Ship extends React.Component {
                         <div style={{ display: "flex", justifyContent: "space-between" }}>
                             <div>
                                 <h3 style={{ color: "#002f80" }}>Robot</h3>
-                                <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[0])}</p>
-                                <p>Pick up time ETA: {this.hourMinutesTime(pickUpTime[0])}</p>
+                                <p>Delivery ETA: {this.hourMinutesTime(deliveryTime[0])}</p>
+                                <p>Pick up ETA: {this.hourMinutesTime(pickUpTime[0])}</p>
                                 <p>Cost: {cost[0]}</p>
 
                                 <h3 style={{ color: "#704000" }}>Drone</h3>
-                                <p>Delivery time ETA: {this.hourMinutesTime(deliveryTime[1])}</p>
-                                <p>Pick up time ETA: {this.hourMinutesTime(pickUpTime[1])}</p>
+                                <p>Delivery ETA: {this.hourMinutesTime(deliveryTime[1])}</p>
+                                <p>Pick up ETA: {this.hourMinutesTime(pickUpTime[1])}</p>
                                 <p>Cost: {cost[1]}</p>
                             </div>
                             <div>
                                 <Image
                                     width={270}
-                                    // height={500}
-                                    // 从父component传入order的信息
                                     src={imgSrc}
                                 />
                             </div>
                         </div>
                     </Card>
                 <br />
-                <h2 style={{ textAlign: "center" }}>Input shipping info</h2>
+
+                <h2 style={{ textAlign: "center" }}>Select Your Delivery Method</h2>
                 <Form
                     onFinish={this.handleSubmit}
-                    style={{ width: "75%", margin: "auto" }}>
-
-                    <h3>From</h3>
-                    <Form.Item
-                        name="sending_address"
-                        label="Street Address"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please input street address. "
-                            }]}
-                    >
-                        <Input />
-                    </Form.Item>
-
-                    <h3>To</h3>
-                    <Form.Item
-                        label="Street Address"
-                        name="receiving_address"
-                        rules={[
-                            {
-                                required: true,
-                                message: "Please input street address. "
-                            },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Weight (lb)"
-                        name="weight"
-                        rules={[
-                            {
-                                required: true,
-                                type: "number",
-                                message: "Please input package weight. "
-                            },
-                        ]}
-                    >
-                        <InputNumber />
-                    </Form.Item>
-
+                    style={{ width: "75%", margin: "auto" }}
+                    >                    
                     <Form.Item>
                         <Radio.Group onChange={this.handleRadioOnChange}>
                             <Radio value={"ROBOT"}>Robot</Radio>
@@ -258,9 +205,8 @@ class Ship extends React.Component {
                             type="primary"
                             htmlType="submit"
                             loading={this.state.loading}
-
                         >
-                            Submit
+                            Place Order
                         </Button>
                     </Form.Item>
                 </Form>
