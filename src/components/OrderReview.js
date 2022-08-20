@@ -2,8 +2,6 @@ import { Card, List, message, Row, Col } from 'antd';
 import React from 'react';
 import { getHistoryOrder } from '../utils';
 import '../styles/OrderReview.css'
-//import { LockOutlined, UserOutlined } from '@ant-design/icons';
-// import { orderReview } from '../utils';
 
 
 class OrderReview extends React.Component {
@@ -64,7 +62,7 @@ class OrderReview extends React.Component {
                         lg: 3,
                         xl: 4,
                         xxl: 5,
-                    }}  
+                    }}
                     className='orderList'
                     // grid={{ gutter: 16, column: 4 }}
                     loading={this.state.loading}
@@ -81,12 +79,11 @@ class OrderReview extends React.Component {
                                     <p>Track_Id: {item.trackId}</p>
                                     <p>Order_Id: {item.orderId}</p>
                                     <p>Weight: {item.weight}</p>
-                                    <p>Sending_Address: {item.sendingAddress}</p>
-                                    <p>Receiving_Address: {item.receivingAddress}</p>
+                                    <p>Sending Address: {item.sendingAddress}</p>
+                                    <p>Receiving Address: {item.receivingAddress}</p>
                                     <p>Price: {item.price}</p>
                                 </Card>
                             </List.Item>
-
                         </div>}
                 />
             </div>

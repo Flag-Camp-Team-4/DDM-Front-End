@@ -6,9 +6,6 @@ import Ship from './Ship';
 
 const { TabPane } = Tabs;
 
-const onChange = (key) => {
-    console.log(key);
-};
 
 class Home extends React.Component {
     render() {
@@ -17,8 +14,7 @@ class Home extends React.Component {
                 <br />
                 <div className='HomePage'>
                     <Tabs
-                        defaultActiveKey="1"
-                        onChange={onChange}
+                        defaultActiveKey="2"
                         size="large"
                         centered
                     >

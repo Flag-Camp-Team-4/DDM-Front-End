@@ -6,8 +6,6 @@ import Home from "./components/Home";
 import StaffPage from "./components/StaffPage";
 import { getHistoryOrder } from "./utils";
 import OrderReview from "./components/OrderReview"
-import PlaceOrderPage from "./components/PlaceOrderPage";
-
 
 const { Header, Content } = Layout;
 
@@ -15,12 +13,12 @@ class App extends React.Component {
     state = {
         authed: false,
         asStaff: false,
-        loading: false, 
+        loading: false,
         toPlaceOrder: false,
         toOrderReviewPage: false,
         toShipPage: false,
-        data: [], 
-        orderInfos: [], 
+        data: [],
+        orderInfos: [],
     };
 
     componentDidMount() {
@@ -65,17 +63,17 @@ class App extends React.Component {
                 loading: false,
             });
         }
-    }; 
+    };
 
     handleToPlaceOrder = () => {
         this.handleHistoryOrder();
-        this.setState( {
+        this.setState({
             toPlaceOrder: true,
         })
     }
 
     handleClickOrderHistory = () => {
-        this.setState( {
+        this.setState({
             loading: true,
         })
     }
@@ -86,26 +84,6 @@ class App extends React.Component {
             toPlaceOrder: false
         });
     }
-
-    renderContent = () => {
-        if (!this.state.authed) {
-            return <LoginPage handleLoginSuccess={this.handleLoginSuccess} />;
-        }
-
-        if (this.state.asStaff) {
-            return <StaffPage />;
-        }
-
-        if(this.state.loading) {
-            return <OrderReview/>;
-        }
-
-        if(this.state.toPlaceOrder) {
-            return <PlaceOrderPage orderInfos={this.state.orderInfos} handleToOrderReviewPage={this.handleToOrderReviewPage}/>;
-        }
-
-        return <Home />;
-    };
 
     userMenu = (
         <Menu>
@@ -118,6 +96,22 @@ class App extends React.Component {
         </Menu>
     );
 
+    renderContent = () => {
+        if (!this.state.authed) {
+            return <LoginPage handleLoginSuccess={this.handleLoginSuccess} />;
+        }
+
+        if (this.state.asStaff) {
+            return <StaffPage />;
+        }
+
+        if (this.state.loading) {
+            return <OrderReview />;
+        }
+
+        return <Home />;
+    };
+
     // Rander App
     render() {
         return (
@@ -128,21 +122,21 @@ class App extends React.Component {
                     }}>
                         Despatch & Delivery Managment
                     </h1>
-                    <div style={{display: "flex", marginRight: "30px"}}>
-                    <div>
-                    <Button
-                        onClick={this.handleClickBackToMain}
-                        >
-                            Home
-                    </Button>
-                    </div>
-                    {this.state.authed && (
-                        <div style={{marginLeft: "20px"}}>
-                            <Dropdown trigger="click" overlay={this.userMenu}>
-                                <Button icon={<UserOutlined />} shape="circle" />
-                            </Dropdown>
+                    <div style={{ display: "flex", marginRight: "30px" }}>
+                        <div>
+                            <Button
+                                onClick={this.handleClickBackToMain}
+                            >
+                                Home
+                            </Button>
                         </div>
-                    )}
+                        {this.state.authed && (
+                            <div style={{ marginLeft: "20px" }}>
+                                <Dropdown trigger="click" overlay={this.userMenu}>
+                                    <Button icon={<UserOutlined />} shape="circle" />
+                                </Dropdown>
+                            </div>
+                        )}
                     </div>
                 </Header>
                 <Content

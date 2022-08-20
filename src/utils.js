@@ -44,6 +44,17 @@ export const trackOrder = (order) => {
     });
 };
 
+export const getOrderSum = (trackId) => {
+    const sumUrl = `${domain}/track/${trackId}`;
+
+    return fetch(sumUrl, {
+    }).then((response) => {
+        if (response.status !== 200) {
+            throw Error("Fail to fetch order summary");
+        }
+        return response.json();
+    });
+};
 
 export const getRouteImg = (address) => {
     const mapquestUrl = `https://www.mapquestapi.com/staticmap/v5/map?start=${address.sending_address}&end=${address.receiving_address}&key=xAGEknEZgp2cweVEAI9RGBYxwGU88prC`; 
@@ -69,6 +80,7 @@ export const submitOrder = (data, deviceType) => {
         if (response.status !== 200) {
             throw Error("Fail to submit the order");
         }
+        return response.json(); 
     });
 }
 
